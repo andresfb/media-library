@@ -1,1 +1,1 @@
-# Media Manager Ingestor
+# Media Library Ingestor
