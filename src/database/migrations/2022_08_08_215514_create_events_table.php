@@ -13,13 +13,20 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('items', function (Blueprint $table) {
+        Schema::create('events', function (Blueprint $table) {
             $table->id();
-            $table->string('hash')->index();
-            $table->string('og_path');
-            $table->string('og_file');
+            $table->unsignedBigInteger('item_id');
+            $table->string('action');
+            $table->string('requester');
             $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign('item_id')
+                ->references('id')
+                ->on('items')
+                ->onDelete('cascade');
+
+            $table->index(['action', 'requester']);
         });
     }
 
@@ -30,6 +37,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('items');
+        Schema::dropIfExists('events');
     }
 };
