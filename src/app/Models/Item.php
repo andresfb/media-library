@@ -38,6 +38,7 @@ use Spatie\Tags\HasTags;
  * @method static \Illuminate\Database\Eloquent\Builder|Item whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Item whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Item whereHash($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Item whereNameHash($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Item whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Item whereOgFile($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Item whereOgPath($value)
@@ -70,11 +71,15 @@ class Item extends Model implements HasMedia
      * exists Method.
      *
      * @param string $hash
+     * @param string $path
      * @return bool
      */
-    public static function found(string $hash): bool
+    public static function found(string $hash, string $path): bool
     {
-        $item = Item::whereHash($hash)->first();
+        $item = Item::whereHash($hash)
+            ->whereOgPath($path)
+            ->first();
+
         return !empty($item);
     }
 
@@ -95,8 +100,17 @@ class Item extends Model implements HasMedia
      */
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('file')
+        $this->addMediaCollection('video')
             ->singleFile()
             ->useDisk('media');
+
+        $this->addMediaCollection('image')
+            ->singleFile()
+            ->useDisk('media');
+
+//        $this->addMediaConversion('preview')
+//            ->format('jpg')
+//            ->fit(Manipulations::FIT_CROP, 600, 600)
+//            ->performOnCollections('image');
     }
 }

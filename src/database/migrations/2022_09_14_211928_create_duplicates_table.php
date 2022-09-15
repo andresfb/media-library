@@ -13,8 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('items', function (Blueprint $table) {
+        Schema::create('duplicates', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('item_id')
+                ->constrained("items")
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
             $table->string('hash');
             $table->string('og_path');
             $table->string('og_file');
@@ -32,6 +36,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('items');
+        Schema::dropIfExists('duplicates');
     }
 };

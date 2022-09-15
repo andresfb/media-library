@@ -1,5 +1,7 @@
 <?php
 
+use App\Libraries\MediaFileNamer;
+use App\Libraries\MediaPathGenerator;
 use App\Models\Media;
 
 return [
@@ -14,7 +16,7 @@ return [
      * The maximum file size of an item in bytes.
      * Adding a larger file will result in an exception.
      */
-    'max_file_size' => 1024 * 1024 * 50, // 50MB
+    'max_file_size' => 1024 * 1024 * 100, // 100MB
 
     /*
      * This queue will be used to generate derived and responsive images.
@@ -54,12 +56,12 @@ return [
     /*
      * This is the class that is responsible for naming generated files.
      */
-    'file_namer' => Spatie\MediaLibrary\Support\FileNamer\DefaultFileNamer::class,
+    'file_namer' => MediaFileNamer::class,
 
     /*
      * The class that contains the strategy for determining a media file's path.
      */
-    'path_generator' => Spatie\MediaLibrary\Support\PathGenerator\DefaultPathGenerator::class,
+    'path_generator' => MediaPathGenerator::class,
 
     /*
      * Here you can specify which path generator should be used for the given class.

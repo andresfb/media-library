@@ -2,8 +2,12 @@
 
 namespace App\Services;
 
+use App\Models\Duplicate;
 use App\Models\Item;
 use Exception;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
+use SplFileInfo;
 
 class ImportMediaService
 {
@@ -27,6 +31,7 @@ class ImportMediaService
         $this->maxFiles = (int) config('raw-files.max_files');
         $path = $this->getLatestImported();
         $files = $this->scanPath($path);
+
         if (empty($files)) {
             throw new Exception("No files found to import");
         }
@@ -42,7 +47,10 @@ class ImportMediaService
      */
     private function getLatestImported(): string
     {
-        $item = Item::orderByDesc("created_at")->first();
+        $item = Item::orderByDesc("id")
+            ->orderByDesc('created_at')
+            ->first();
+
         if (empty($item)) {
             return '00001';
         }
@@ -95,17 +103,27 @@ class ImportMediaService
                 continue;
             }
 
-            if ($this->scanned == $this->maxFiles) {
+            if ($this->scanned >= $this->maxFiles) {
                 return $files;
             }
 
             $fullFile = sprintf("%s/%s", $baseFolder, $scan);
             $hash = hash_file('md5', $fullFile);
+            $path = str_replace(config('raw-files.path'), '', $baseFolder);
+
             if (array_key_exists($hash, $files)) {
+                print("dup skiped\n");
                 continue;
             }
 
-            if (Item::found($hash)) {
+            if (Item::found($hash, $path)) {
+                continue;
+            }
+
+            $item = Item::whereHash($hash)->first();
+            if (!empty($item)) {
+                print("record dup skiped\n");
+                $this->saveDuplicate($item->id, $hash, $path, $fullFile);
                 continue;
             }
 
@@ -121,15 +139,47 @@ class ImportMediaService
      *
      * @param array $files
      * @return void
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
      */
     private function importFiles(array $files): void
     {
-//        foreach ($files as $hash => $file) {
-//            $item = Item::updateOrCreate([
-//
-//            ], [
-//                'hash' => $hash
-//            ]);
-//        }
+        foreach ($files as $hash => $file) {
+            $fileInfo = new SplFileInfo($file);
+            $path = str_replace(config('raw-files.path'), '', $fileInfo->getPath());
+
+            $item = Item::updateOrCreate([
+                'hash' => $hash,
+                'og_path' => $path,
+            ], [
+                'og_file' => $fileInfo->getFilename(),
+            ]);
+
+            $type = getimagesize($file) ? "image" : "video";
+            $item->addMedia($file)
+                ->preservingOriginal()
+                ->toMediaCollection($type);
+        }
+    }
+
+    /**
+     * saveDuplicate Method.
+     *
+     * @param int $itemId
+     * @param string $fileHash
+     * @param string $nameHash
+     * @param string $fullFile
+     * @return void
+     */
+    private function saveDuplicate(int $itemId, string $fileHash, string $path, string $fullFile): void
+    {
+        $fileInfo = new SplFileInfo($fullFile);
+        Duplicate::updateOrCreate([
+            'item_id' => $itemId,
+            'hash' => $fileHash,
+            'og_path' => $path,
+        ],[
+            'og_file' => $fileInfo->getFilename(),
+        ]);
     }
 }
