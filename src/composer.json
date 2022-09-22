@@ -11,8 +11,7 @@
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
-        "spatie/laravel-medialibrary": "^10.0.0",
-        "spatie/laravel-tags": "^4.3"
+        "spatie/laravel-medialibrary": "^10.0.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.12",

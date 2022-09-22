@@ -32,7 +32,9 @@ class ImportMediaCommand extends Command
     {
         try {
             if ($this->confirm("Send job to Queue", !config('app.debug'))) {
-                ImportMediaJob::dispatch();
+                ImportMediaJob::dispatch()
+                    ->onQueue('ingestor');
+
                 $this->info("\nDone\n");
                 return 0;
             }

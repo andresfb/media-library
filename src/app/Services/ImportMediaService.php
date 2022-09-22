@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Duplicate;
 use App\Models\Item;
 use Exception;
+use Illuminate\Support\Facades\Log;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 use SplFileInfo;
@@ -20,6 +21,10 @@ class ImportMediaService
     /** @var int */
     private int $scanned = 0;
 
+    /** @var int */
+    private int $imported = 0;
+
+
     /**
      * execute Method.
      *
@@ -28,6 +33,8 @@ class ImportMediaService
      */
     public function execute(): void
     {
+        Log::info("Media import started at " . now()->toDateTimeString());
+
         $this->maxFiles = (int) config('raw-files.max_files');
         $path = $this->getLatestImported();
         $files = $this->scanPath($path);
@@ -37,6 +44,8 @@ class ImportMediaService
         }
 
         $this->importFiles($files);
+
+        Log::info("Media import started at " . now()->toDateTimeString() . ". Imported {$this->imported}");
     }
 
 
@@ -112,7 +121,6 @@ class ImportMediaService
             $path = str_replace(config('raw-files.path'), '', $baseFolder);
 
             if (array_key_exists($hash, $files)) {
-                print("dup skiped\n");
                 continue;
             }
 
@@ -122,7 +130,6 @@ class ImportMediaService
 
             $item = Item::whereHash($hash)->first();
             if (!empty($item)) {
-                print("record dup skiped\n");
                 $this->saveDuplicate($item->id, $hash, $path, $fullFile);
                 continue;
             }
@@ -148,17 +155,34 @@ class ImportMediaService
             $fileInfo = new SplFileInfo($file);
             $path = str_replace(config('raw-files.path'), '', $fileInfo->getPath());
 
+            $type = getimagesize($file) ? "image" : "video";
             $item = Item::updateOrCreate([
                 'hash' => $hash,
                 'og_path' => $path,
             ], [
                 'og_file' => $fileInfo->getFilename(),
+                'type' => $type
             ]);
 
-            $type = getimagesize($file) ? "image" : "video";
+            $item->events()->updateOrCreate([
+                'item_id' => $item->id,
+                'action' => 'imported'
+            ],[
+                'requester' => ImportMediaService::class
+            ]);
+
             $item->addMedia($file)
                 ->preservingOriginal()
                 ->toMediaCollection($type);
+
+            $item->events()->updateOrCreate([
+                'item_id' => $item->id,
+                'action' => 'media added'
+            ],[
+                'requester' => ImportMediaService::class
+            ]);
+
+            $this->imported++;
         }
     }
 
@@ -167,7 +191,7 @@ class ImportMediaService
      *
      * @param int $itemId
      * @param string $fileHash
-     * @param string $nameHash
+     * @param string $path
      * @param string $fullFile
      * @return void
      */

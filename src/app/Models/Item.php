@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\ConvertDateTimeToTimezone;
 use Eloquent;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +13,6 @@ use Illuminate\Support\Carbon;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection;
-use Spatie\Tags\HasTags;
 
 /**
  * App\Models\Item
@@ -54,7 +54,7 @@ use Spatie\Tags\HasTags;
 class Item extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
-    use HasTags, SoftDeletes;
+    use SoftDeletes, ConvertDateTimeToTimezone;
 
     /** @var array */
     protected $guarded = [];
@@ -107,10 +107,5 @@ class Item extends Model implements HasMedia
         $this->addMediaCollection('image')
             ->singleFile()
             ->useDisk('media');
-
-//        $this->addMediaConversion('preview')
-//            ->format('jpg')
-//            ->fit(Manipulations::FIT_CROP, 600, 600)
-//            ->performOnCollections('image');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\ConvertDateTimeToTimezone;
 use Eloquent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -40,7 +41,7 @@ use Illuminate\Support\Carbon;
  */
 class Duplicate extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, ConvertDateTimeToTimezone;
 
     /** @var array */
     protected $guarded = [];

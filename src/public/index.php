@@ -3,6 +3,8 @@
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
 
+date_default_timezone_set("America/New_York");
+
 define('LARAVEL_START', microtime(true));
 
 /*
