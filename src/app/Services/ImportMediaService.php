@@ -146,43 +146,45 @@ class ImportMediaService
      *
      * @param array $files
      * @return void
-     * @throws FileDoesNotExist
-     * @throws FileIsTooBig
      */
     private function importFiles(array $files): void
     {
         foreach ($files as $hash => $file) {
-            $fileInfo = new SplFileInfo($file);
-            $path = str_replace(config('raw-files.path'), '', $fileInfo->getPath());
+            try {
+                $fileInfo = new SplFileInfo($file);
+                $path = str_replace(config('raw-files.path'), '', $fileInfo->getPath());
+                $type = getimagesize($file) ? "image" : "video";
 
-            $type = getimagesize($file) ? "image" : "video";
-            $item = Item::updateOrCreate([
-                'hash' => $hash,
-                'og_path' => $path,
-            ], [
-                'og_file' => $fileInfo->getFilename(),
-                'type' => $type
-            ]);
+                $item = Item::updateOrCreate([
+                    'hash' => $hash,
+                    'og_path' => $path,
+                ], [
+                    'og_file' => $fileInfo->getFilename(),
+                    'type' => $type
+                ]);
 
-            $item->events()->updateOrCreate([
-                'item_id' => $item->id,
-                'action' => 'imported'
-            ],[
-                'requester' => ImportMediaService::class
-            ]);
+                $item->events()->updateOrCreate([
+                    'item_id' => $item->id,
+                    'action' => 'imported'
+                ], [
+                    'requester' => ImportMediaService::class
+                ]);
 
-            $item->addMedia($file)
-                ->preservingOriginal()
-                ->toMediaCollection($type);
+                $item->addMedia($file)
+                    ->preservingOriginal()
+                    ->toMediaCollection($type);
 
-            $item->events()->updateOrCreate([
-                'item_id' => $item->id,
-                'action' => 'media added'
-            ],[
-                'requester' => ImportMediaService::class
-            ]);
+                $item->events()->updateOrCreate([
+                    'item_id' => $item->id,
+                    'action' => 'media added'
+                ], [
+                    'requester' => ImportMediaService::class
+                ]);
 
-            $this->imported++;
+                $this->imported++;
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
+            }
         }
     }
 
