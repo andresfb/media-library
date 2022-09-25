@@ -3,17 +3,13 @@
 namespace App\Models;
 
 use App\Traits\ConvertDateTimeToTimezone;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-/**
- * App\Models\Event
- */
-class Event extends Model
+class Post extends Model
 {
-    use HasFactory, SoftDeletes, ConvertDateTimeToTimezone;
+    use SoftDeletes, ConvertDateTimeToTimezone;
 
     /** @var array */
     protected $guarded = [];
@@ -23,6 +19,13 @@ class Event extends Model
         'deleted_at',
         'created_at',
         'updated_at',
+    ];
+
+    /** @var string[] */
+    protected $casts = [
+        'id' => 'integer',
+        'item_id' => 'integer',
+        'status' => 'integer',
     ];
 
 
