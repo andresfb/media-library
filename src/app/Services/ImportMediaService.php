@@ -153,7 +153,8 @@ class ImportMediaService
             try {
                 $fileInfo = new SplFileInfo($file);
                 $path = str_replace(config('raw-files.path'), '', $fileInfo->getPath());
-                $type = getimagesize($file) ? "image" : "video";
+                $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+                $type = getimagesize($file) || $extension == 'heic' ? "image" : "video";
 
                 $item = Item::updateOrCreate([
                     'hash' => $hash,
