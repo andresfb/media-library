@@ -5,74 +5,74 @@ namespace App\Services;
 use App\Models\Item;
 use App\Models\Post;
 use Exception;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class GeneratePostsService
 {
-    use WithFaker;
-
-    /** @var int */
-    private int $howMany;
-
-    /** @var int */
     private int $generated = 0;
 
+    private ContentOrchestratorService $service;
 
-    public function __construct(int $howMany = 0)
+
+    public function __construct(ContentOrchestratorService $service)
     {
-        $this->setUpFaker();
-        $this->howMany = $howMany ?? (int) config('items.max_random_posts');
+        $this->service = $service;
     }
 
     /**
      * execute Method.
      *
+     * @param int $howMany
      * @return void
      */
-    public function execute(): void
+    public function execute(int $howMany = 0): void
     {
-        Log::info("Generating Posts started at " . now()->toDateTimeString());
+        if (empty($howMany)) {
+            $howMany = (int) config('items.max_random_posts');
+        }
 
-        $items = Item::unused('image', $this->howMany)->get();
-        $this->generatePosts($items, "image");
+        Log::info("Generating started. Generating ($howMany) Posts.");
+        $this->service->setTotal($howMany);
 
-        $items = Item::unused('video', $this->howMany)->get();
-        $this->generatePosts($items, "video");
+        $items = Item::select("items.*")
+            ->unused($howMany)
+            ->get();
 
-        Log::info("Generating Posts started at " . now()->toDateTimeString() . ". Generated {$this->generated}");
+        $this->generatePosts($items);
+        Log::info("Generating Posts finished at Generated {$this->generated}");
     }
 
     /**
      * generatePosts Method.
      *
      * @param $items
-     * @param string $type
      * @return void
      */
-    private function generatePosts($items, string $type): void
+    private function generatePosts($items): void
     {
         if (!$items->count()) {
-            Log::info("Generating Posts found no {$type} " . now()->toDateTimeString());
+            Log::info("Generating Posts - No Post found.");
             return;
         }
 
-        /** @var Item $item */
         foreach ($items as $item) {
             try {
-                $title = $this->faker->sentence(4);
+                $this->service->next();
+                $title = $this->service->getTitle();
                 $slug = Str::slug($title);
 
-                Post::create([
-                    'item_id' => $items->id,
+                $post = Post::create([
+                    'item_id' => $item->id,
                     'status' => 0,
-                    'type' => $type,
+                    'type' => $item->type,
                     'slug' => $slug,
                     'title' => $title,
-                    'content' => $this->faker->realTextBetween(100, 500),
-                    'og_file' => "/$items->og_path/$items->og_file"
+                    'content' => $this->service->getText(),
+                    'og_file' => "/$item->og_path/$item->og_file"
                 ]);
+
+                $post->attachTag($this->service->getTag());
 
                 $item->events()->updateOrCreate([
                     'item_id' => $item->id,
@@ -80,6 +80,8 @@ class GeneratePostsService
                 ], [
                     'requester' => GeneratePostsService::class
                 ]);
+
+                $this->generated++;
             } catch (Exception $e) {
                 Log::error($e->getMessage());
             }

@@ -17,9 +17,9 @@ class ImportMediaJob implements ShouldQueue
 
     private ImportMediaService $service;
 
-    public function __construct()
+    public function __construct(ImportMediaService $service)
     {
-        $this->service = resolve(ImportMediaService::class);
+        $this->service = $service;
     }
 
     /**

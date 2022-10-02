@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\ContentOrchestratorService;
 use App\Services\GeneratePostsService;
 use App\Services\ImportMediaService;
 use Illuminate\Support\ServiceProvider;
@@ -20,7 +21,11 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(GeneratePostsService::class, function () {
-            return new GeneratePostsService();
+            return new GeneratePostsService(new ContentOrchestratorService);
+        });
+
+        $this->app->bind(ContentOrchestratorService::class, function () {
+            return new ContentOrchestratorService();
         });
     }
 

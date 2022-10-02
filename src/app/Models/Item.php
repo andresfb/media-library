@@ -86,16 +86,15 @@ class Item extends Model implements HasMedia
      * scopeUnused Method.
      *
      * @param Builder $query
-     * @param string $type
      * @param int $limit
      * @return Builder
      */
-    public function scopeUnused(Builder $query, string $type, int $limit): Builder
+    public function scopeUnused(Builder $query, int $limit): Builder
     {
-        return $query->where('items.type', $type)
-            ->join('posts', 'items.id', '=', 'posts.item_id', 'left outer')
+        return $query->join('posts', 'posts.item_id', '=', 'items.id', 'left outer')
             ->whereNull('posts.id')
             ->inRandomOrder()
-            ->limit($limit);
+            ->limit($limit)
+            ->with('media');
     }
 }

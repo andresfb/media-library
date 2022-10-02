@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Jobs\GeneratePostJob;
+use App\Services\ContentOrchestratorService;
 use App\Services\GeneratePostsService;
 use Exception;
 use Illuminate\Console\Command;
@@ -33,8 +34,8 @@ class GeneratePostsCommand extends Command
 
             $howMany = (int) $this->ask("How many posts", 10);
 
-            $service = new GeneratePostsService($howMany);
-            $service->execute();
+            $service = new GeneratePostsService(new ContentOrchestratorService());
+            $service->execute($howMany);
 
             $this->info("\nDone\n");
             return 0;

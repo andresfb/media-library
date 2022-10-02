@@ -21,6 +21,8 @@ return new class extends Migration {
                 ->default(0);
             $table->softDeletes();
             $table->timestamps();
+
+            $table->index(['type', 'slug'], 'type_slug_idx');
         });
     }
 
