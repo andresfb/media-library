@@ -58,7 +58,10 @@ class GeneratePostsService
 
         foreach ($items as $item) {
             try {
-                $this->service->next();
+                if (!$this->service->next()) {
+                    break;
+                }
+
                 $title = $this->service->getTitle();
                 $slug = Str::slug($title);
 

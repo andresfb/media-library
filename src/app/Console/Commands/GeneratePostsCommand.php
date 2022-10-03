@@ -34,15 +34,16 @@ class GeneratePostsCommand extends Command
 
             $howMany = (int) $this->ask("How many posts", 10);
 
-            $service = new GeneratePostsService(new ContentOrchestratorService());
+            $service = resolve(GeneratePostsService::class);
             $service->execute($howMany);
 
             $this->info("\nDone\n");
             return 0;
         } catch (Exception $e) {
-            $this->error("\nError found:\n");
+            $this->newLine();
+            $this->warn("Error found:");
             $this->error($e->getMessage());
-            $this->info("");
+            $this->newLine();
             return 1;
         }
     }

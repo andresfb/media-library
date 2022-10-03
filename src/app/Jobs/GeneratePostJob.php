@@ -17,7 +17,6 @@ class GeneratePostJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /** @var GeneratePostsService */
     private GeneratePostsService $service;
 
 

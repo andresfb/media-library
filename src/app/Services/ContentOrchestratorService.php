@@ -2,29 +2,44 @@
 
 namespace App\Services;
 
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Services\Content\BibleContentService;
+use App\Services\Content\ContentServiceInterface;
 
 class ContentOrchestratorService
 {
-    use WithFaker;
-
-    /** @var int */
     private int $total;
+
+    private array $sources = [];
+
+    private ContentServiceInterface $service;
+
 
     public function __construct()
     {
-        $this->setUpFaker();
         $this->total = (int) config('items.max_random_posts');
     }
 
     /**
      * next Method.
      *
-     * @return void
+     * @return bool
      */
-    public function next(): void
+    public function next(): bool
     {
+        if (empty($this->sources)) {
+            $this->loadSources();
+        }
 
+        if ($this->service->next()) {
+            return true;
+        }
+
+        $source = array_shift($this->sources);
+        if (empty($source)) {
+            return false;
+        }
+
+        return $this->service->next();
     }
 
     /**
@@ -34,7 +49,7 @@ class ContentOrchestratorService
      */
     public function getTitle(): string
     {
-        return $this->faker->sentence(3);
+        return $this->service->getTitle();
     }
 
     /**
@@ -44,7 +59,7 @@ class ContentOrchestratorService
      */
     public function getText(): string
     {
-        return $this->faker->paragraph(4);
+        return $this->service->getText();
     }
 
     /**
@@ -54,7 +69,7 @@ class ContentOrchestratorService
      */
     public function getTag(): string
     {
-        return "faker";
+        return $this->service->getTag();
     }
 
     /**
@@ -63,5 +78,25 @@ class ContentOrchestratorService
     public function setTotal(int $total): void
     {
         $this->total = $total;
+    }
+
+
+    /**
+     * loadSources Method.
+     *
+     * @return void
+     */
+    private function loadSources(): void
+    {
+        $this->sources = [
+            new BibleContentService(),
+        ];
+
+        $perService = ceil($this->total / count($this->sources));
+        foreach ($this->sources as $source) {
+            $source->setTotal($perService);
+        }
+
+        $this->service = array_shift($this->sources);
     }
 }
