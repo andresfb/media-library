@@ -44,6 +44,17 @@ return [
             'throw' => false,
         ],
 
+        'upload' => [
+            'driver' => 'local',
+            'root'   => storage_path('app/upload'),
+        ],
+
+        'media' => [
+            'driver' => 'local',
+            'root'   => env('MEDIA_STORAGE_PATH'),
+            'url'    => env('APP_URL').'/media',
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
@@ -54,12 +65,6 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,
-        ],
-
-        'media' => [
-            'driver' => 'local',
-            'root'   => env('MEDIA_STORAGE_PATH'),
-            'url'    => env('APP_URL').'/media',
         ],
 
     ],
