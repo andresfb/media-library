@@ -3,16 +3,30 @@
 namespace App\Services\Content;
 
 use App\Models\Bible;
-use Illuminate\Database\Eloquent\Collection;
 
 class BibleContentService implements ContentServiceInterface
 {
-    private Collection $records;
+    private array $records;
 
     private Bible $current;
 
     private string $field = "";
 
+
+    /**
+     * loadRecords Method.
+     *
+     * @param int $total
+     * @return void
+     */
+    public function loadRecords(int $total): void
+    {
+        $this->records = Bible::where('used', '<=', 10)
+            ->inRandomOrder()
+            ->limit($total)
+            ->get()
+            ->all();
+    }
 
     /**
      * next Method.
@@ -21,14 +35,14 @@ class BibleContentService implements ContentServiceInterface
      */
     public function next(): bool
     {
-        $this->current = $this->records->shift()->first();
+        $this->current = array_shift($this->records);
         if (empty($this->current)) {
             return false;
         }
 
         do {
             $this->field = $this->current->getRandomField();
-        } while (!empty($this->current->{$this->field}));
+        } while (empty($this->current->{$this->field}));
 
         return true;
     }
@@ -53,7 +67,9 @@ class BibleContentService implements ContentServiceInterface
         return sprintf(
             "%s\n\n*—%s*",
             $this->current->{$this->field},
-            $this->current->getTableInfo()[$this->field],
+            $this->current->getTableInfo()
+                ->where('key', $this->field)
+                ->first()['value'],
         );
     }
 
@@ -68,16 +84,12 @@ class BibleContentService implements ContentServiceInterface
     }
 
     /**
-     * setTotal Method.
+     * markUsed Method.
      *
-     * @param int $total
      * @return void
      */
-    public function setTotal(int $total): void
+    public function markUsed(): void
     {
-        $this->records = Bible::whereUsed(false)
-            ->inRandomOrder()
-            ->limit($total)
-            ->get();
+        $this->current->increment('used');
     }
 }

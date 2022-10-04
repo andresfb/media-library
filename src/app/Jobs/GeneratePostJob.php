@@ -20,9 +20,9 @@ class GeneratePostJob implements ShouldQueue
     private GeneratePostsService $service;
 
 
-    public function __construct(GeneratePostsService $service)
+    public function __construct(GeneratePostsService $service = null)
     {
-        $this->service = $service;
+        $this->service = $service ?? resolve(GeneratePostsService::class);
     }
 
     /**

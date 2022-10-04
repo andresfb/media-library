@@ -24,14 +24,6 @@ class GeneratePostsCommand extends Command
     public function handle(): int
     {
         try {
-            if ($this->confirm("Send job to Queue", !config('app.debug'))) {
-                GeneratePostJob::dispatch()
-                    ->onQueue('ingestor');
-
-                $this->info("\nDone\n");
-                return 0;
-            }
-
             $howMany = (int) $this->ask("How many posts", 10);
 
             $service = resolve(GeneratePostsService::class);

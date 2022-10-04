@@ -16,7 +16,6 @@ return new class extends Migration {
             $table->string('slug', 200);
             $table->string("title", 100);
             $table->text('content');
-            $table->text('og_file');
             $table->unsignedTinyInteger('status')
                 ->default(0);
             $table->softDeletes();

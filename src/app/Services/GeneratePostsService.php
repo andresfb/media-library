@@ -72,7 +72,6 @@ class GeneratePostsService
                     'slug' => $slug,
                     'title' => $title,
                     'content' => $this->service->getText(),
-                    'og_file' => "/$item->og_path/$item->og_file"
                 ]);
 
                 $post->attachTag($this->service->getTag());
@@ -84,6 +83,7 @@ class GeneratePostsService
                     'requester' => GeneratePostsService::class
                 ]);
 
+                $this->service->markUsed();
                 $this->generated++;
             } catch (Exception $e) {
                 Log::error($e->getMessage());

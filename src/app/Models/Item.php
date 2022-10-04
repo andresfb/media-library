@@ -94,7 +94,7 @@ class Item extends Model implements HasMedia
         return $query->join('posts', 'posts.item_id', '=', 'items.id', 'left outer')
             ->whereNull('posts.id')
             ->inRandomOrder()
-            ->limit($limit)
-            ->with('media');
+            ->with('media')
+            ->limit($limit);
     }
 }

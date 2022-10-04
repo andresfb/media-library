@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->text("ylt")->comment("Young's Literal Translation");
             $table->text("akj")->comment("American King James Version");
             $table->text("wnt")->comment("Weymouth New Testament");
-            $table->boolean("used")->default(false);
+            $table->unsignedSmallInteger("used")->default(0);
 
             $table->index(['verse', 'used'], 'verse_used_idx');
         });

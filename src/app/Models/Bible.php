@@ -16,7 +16,7 @@ class Bible extends Model
 
     /** @var string[] */
     protected $casts = [
-        'used' => 'boolean'
+        'used' => 'int'
     ];
 
     /** @var bool */

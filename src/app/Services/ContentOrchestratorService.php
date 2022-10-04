@@ -80,6 +80,15 @@ class ContentOrchestratorService
         $this->total = $total;
     }
 
+    /**
+     * markUsed Method.
+     *
+     * @return void
+     */
+    public function markUsed(): void
+    {
+        $this->service->markUsed();
+    }
 
     /**
      * loadSources Method.
@@ -94,7 +103,7 @@ class ContentOrchestratorService
 
         $perService = ceil($this->total / count($this->sources));
         foreach ($this->sources as $source) {
-            $source->setTotal($perService);
+            $source->loadRecords($perService);
         }
 
         $this->service = array_shift($this->sources);

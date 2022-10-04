@@ -12,5 +12,7 @@ interface ContentServiceInterface
 
     public function getTag(): string;
 
-    public function setTotal(int $total): void;
+    public function loadRecords(int $total): void;
+
+    public function markUsed(): void;
 }
