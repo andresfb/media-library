@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Image\Exceptions\InvalidManipulation;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -17,6 +18,12 @@ class Item extends Model implements HasMedia
 
     /** @var array */
     protected $guarded = [];
+
+    /** @var string[] */
+    protected $casts = [
+        'active' => 'boolean',
+        'og_item_id' => 'integer',
+    ];
 
     /** @var string[] */
     protected $dates = [
@@ -43,19 +50,10 @@ class Item extends Model implements HasMedia
     }
 
     /**
-     * events Method.
-     *
-     * @return HasMany
-     */
-    public function events(): HasMany
-    {
-        return $this->hasMany(Event::class);
-    }
-
-    /**
      * registerMediaCollections Method.
      *
      * @return void
+     * @throws InvalidManipulation
      */
     public function registerMediaCollections(): void
     {
@@ -66,5 +64,15 @@ class Item extends Model implements HasMedia
         $this->addMediaCollection('image')
             ->singleFile()
             ->useDisk('media');
+
+        $this->addMediaCollection('heic')
+            ->singleFile()
+            ->useDisk('media');
+
+        $this->addMediaConversion('thumb')
+            ->format('jpg')
+            ->width(600)
+            ->sharpen(8)
+            ->performOnCollections('heic');
     }
 }

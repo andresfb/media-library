@@ -16,8 +16,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->job(new ImportMediaJob(), 'ingestor')
-            ->everyThreeHours();
+        $schedule->job(new ImportMediaJob(), 'ingestor')->hourly();
     }
 
     /**

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->softDeletes();
             $table->timestamps();
 
-            $table->index(['hash', 'og_path']);
+            $table->index(['hash', 'og_path'], 'hash_path_idx');
         });
     }
 

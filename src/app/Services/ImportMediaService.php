@@ -28,14 +28,15 @@ class ImportMediaService
     /**
      * execute Method.
      *
+     * @param int $howMany
      * @return void
      * @throws Exception
      */
-    public function execute(): void
+    public function execute(int $howMany = 0): void
     {
         Log::info("Media import started at " . now()->toDateTimeString());
 
-        $this->maxFiles = (int) config('raw-files.max_files');
+        $this->maxFiles = $howMany ?? (int) config('raw-files.max_files');
         $path = $this->getLatestImported();
         $files = $this->scanPath($path);
 
@@ -45,7 +46,10 @@ class ImportMediaService
 
         $this->importFiles($files);
 
-        Log::info("Media import started at " . now()->toDateTimeString() . ". Imported {$this->imported}");
+        Log::info("Media import finished at "
+            . now()->toDateTimeString()
+            . ". Imported {$this->imported}"
+        );
     }
 
 
@@ -128,12 +132,6 @@ class ImportMediaService
                 continue;
             }
 
-            $item = Item::whereHash($hash)->first();
-            if (!empty($item)) {
-                $this->saveDuplicate($item->id, $hash, $path, $fullFile);
-                continue;
-            }
-
             $files[$hash] = $fullFile;
             $this->scanned++;
         }
@@ -154,59 +152,34 @@ class ImportMediaService
                 $fileInfo = new SplFileInfo($file);
                 $path = str_replace(config('raw-files.path'), '', $fileInfo->getPath());
                 $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-                $type = getimagesize($file) || $extension == 'heic' ? "image" : "video";
+                $type = $extension == 'heic'
+                    ? 'heic'
+                    : (getimagesize($file) ? "image" : "video");
+
+                $ogItem = Item::select('id')
+                    ->whereHash($hash)
+                    ->first()
+                    ->pluck('id')
+                    ->toArray();
 
                 $item = Item::updateOrCreate([
                     'hash' => $hash,
                     'og_path' => $path,
                 ], [
                     'og_file' => $fileInfo->getFilename(),
-                    'type' => $type
-                ]);
-
-                $item->events()->updateOrCreate([
-                    'item_id' => $item->id,
-                    'action' => 'imported'
-                ], [
-                    'requester' => ImportMediaService::class
+                    'type' => $type,
+                    'active' => true,
+                    'og_item_id' => $ogItem ?? null,
                 ]);
 
                 $item->addMedia($file)
                     ->preservingOriginal()
                     ->toMediaCollection($type);
 
-                $item->events()->updateOrCreate([
-                    'item_id' => $item->id,
-                    'action' => 'media added'
-                ], [
-                    'requester' => ImportMediaService::class
-                ]);
-
                 $this->imported++;
             } catch (Exception $e) {
                 Log::error($e->getMessage());
             }
         }
-    }
-
-    /**
-     * saveDuplicate Method.
-     *
-     * @param int $itemId
-     * @param string $fileHash
-     * @param string $path
-     * @param string $fullFile
-     * @return void
-     */
-    private function saveDuplicate(int $itemId, string $fileHash, string $path, string $fullFile): void
-    {
-        $fileInfo = new SplFileInfo($fullFile);
-        Duplicate::updateOrCreate([
-            'item_id' => $itemId,
-            'hash' => $fileHash,
-            'og_path' => $path,
-        ],[
-            'og_file' => $fileInfo->getFilename(),
-        ]);
     }
 }
