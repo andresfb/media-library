@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Jobs\ConvertHeicToJpgJob;
 use App\Models\Item;
 use Exception;
 use FFMpeg\FFProbe;
@@ -10,6 +11,8 @@ use SplFileInfo;
 
 class ImportMediaService
 {
+    const HEIC_TYPE = 'heic';
+
     /** @var array */
     private array $baseFolders = [];
 
@@ -154,13 +157,13 @@ class ImportMediaService
     private function importFiles(array $files): void
     {
         foreach ($files as $hash => $file) {
+            $itemId = 0;
+
             try {
                 $fileInfo = new SplFileInfo($file);
                 $path = str_replace(config('raw-files.path'), '', $fileInfo->getPath());
                 $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-                $type = $extension == 'heic'
-                    ? 'heic'
-                    : (getimagesize($file) ? "image" : "video");
+                $type = $extension == self::HEIC_TYPE || getimagesize($file) ? "image" : "video";
 
                 $ogItem = Item::select('id')
                     ->whereHash($hash)
@@ -177,14 +180,26 @@ class ImportMediaService
                     'exif' => $this->getExif($file),
                 ]);
 
+                $itemId = $item->id;
+
+                // If we get a file in HEIC format, send to a job to convert to JPG
+                if ($extension == self::HEIC_TYPE) {
+                    ConvertHeicToJpgJob::dispatch($itemId, $file)->onQueue('media');
+                    $this->imported++;
+                    continue;
+                }
+
                 $item->addMedia($file)
                     ->preservingOriginal()
                     ->toMediaCollection($type);
 
                 $this->imported++;
             } catch (Exception $e) {
+                Item::disable($itemId);
+
                 $message = "$file got error: " . $e->getMessage();
                 Log::error($message);
+
                 if (app()->runningInConsole()) {
                     echo $message . PHP_EOL;
                 }
@@ -207,7 +222,7 @@ class ImportMediaService
             'file_name' => $fileInfo->getFilename(),
             'extension' => $fileInfo->getExtension(),
             'size' => $fileInfo->getSize(),
-            'modfied_at' => $fileInfo->getMTime(),
+            'modified_at' => $fileInfo->getMTime(),
         ];
 
         try {

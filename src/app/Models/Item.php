@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use App\Traits\ConvertDateTimeToTimezone;
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Image\Exceptions\InvalidManipulation;
+use Illuminate\Support\Facades\Log;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -54,7 +54,6 @@ class Item extends Model implements HasMedia
      * registerMediaCollections Method.
      *
      * @return void
-     * @throws InvalidManipulation
      */
     public function registerMediaCollections(): void
     {
@@ -65,15 +64,30 @@ class Item extends Model implements HasMedia
         $this->addMediaCollection('image')
             ->singleFile()
             ->useDisk('media');
+    }
 
-        $this->addMediaCollection('heic')
-            ->singleFile()
-            ->useDisk('media');
+    /**
+     * disable Method.
+     *
+     * @param int $itemId
+     * @return void
+     */
+    public static function disable(int $itemId): void
+    {
+        if (empty($itemId)) {
+            return;
+        }
 
-        $this->addMediaConversion('thumb')
-            ->format('jpg')
-            ->width(600)
-            ->sharpen(8)
-            ->performOnCollections('heic');
+        try {
+            $item = Item::find($itemId);
+            if (empty($item)) {
+                return;
+            }
+
+            $item->active = false;
+            $item->save();
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+        }
     }
 }
