@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use App\Traits\ConvertDateTimeToTimezone;
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -21,6 +21,13 @@ class Item extends Model implements HasMedia
 
     /** @var array */
     protected $guarded = [];
+
+    /** @var string[] */
+    protected $casts = [
+        'active' => 'boolean',
+        'og_item_id' => 'integer',
+        'exif' => 'json',
+    ];
 
     /** @var string[] */
     protected $dates = [
@@ -47,26 +54,6 @@ class Item extends Model implements HasMedia
     }
 
     /**
-     * events Method.
-     *
-     * @return HasMany
-     */
-    public function events(): HasMany
-    {
-        return $this->hasMany(Event::class);
-    }
-
-    /**
-     * posts Method.
-     *
-     * @return HasMany
-     */
-    public function posts(): HasMany
-    {
-        return $this->hasMany(Post::class);
-    }
-
-    /**
      * registerMediaCollections Method.
      *
      * @return void
@@ -83,18 +70,27 @@ class Item extends Model implements HasMedia
     }
 
     /**
-     * scopeUnused Method.
+     * disable Method.
      *
-     * @param Builder $query
-     * @param int $limit
-     * @return Builder
+     * @param int $itemId
+     * @return void
      */
-    public function scopeUnused(Builder $query, int $limit): Builder
+    public static function disable(int $itemId): void
     {
-        return $query->join('posts', 'posts.item_id', '=', 'items.id', 'left outer')
-            ->whereNull('posts.id')
-            ->inRandomOrder()
-            ->with('media')
-            ->limit($limit);
+        if (empty($itemId)) {
+            return;
+        }
+
+        try {
+            $item = Item::find($itemId);
+            if (empty($item)) {
+                return;
+            }
+
+            $item->active = false;
+            $item->save();
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+        }
     }
 }

@@ -2,16 +2,17 @@
 
 namespace App\Services;
 
-use App\Models\Duplicate;
+use App\Jobs\ConvertHeicToJpgJob;
 use App\Models\Item;
 use Exception;
+use FFMpeg\FFProbe;
 use Illuminate\Support\Facades\Log;
-use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
-use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 use SplFileInfo;
 
 class ImportMediaService
 {
+    const HEIC_TYPE = 'heic';
+
     /** @var array */
     private array $baseFolders = [];
 
@@ -24,18 +25,27 @@ class ImportMediaService
     /** @var int */
     private int $imported = 0;
 
+    /** @var FFProbe */
+    private FFProbe $prober;
+
+
+    public function __construct()
+    {
+        $this->prober = FFProbe::create();
+    }
 
     /**
      * execute Method.
      *
+     * @param int $howMany
      * @return void
      * @throws Exception
      */
-    public function execute(): void
+    public function execute(int $howMany = 0): void
     {
         Log::info("Media import started at " . now()->toDateTimeString());
 
-        $this->maxFiles = (int) config('raw-files.max_files');
+        $this->maxFiles = $howMany ?? (int) config('raw-files.max_files');
         $path = $this->getLatestImported();
         $files = $this->scanPath($path);
 
@@ -45,7 +55,10 @@ class ImportMediaService
 
         $this->importFiles($files);
 
-        Log::info("Media import started at " . now()->toDateTimeString() . ". Imported {$this->imported}");
+        Log::info("Media import finished at "
+            . now()->toDateTimeString()
+            . ". Imported {$this->imported}"
+        );
     }
 
 
@@ -128,12 +141,6 @@ class ImportMediaService
                 continue;
             }
 
-            $item = Item::whereHash($hash)->first();
-            if (!empty($item)) {
-                $this->saveDuplicate($item->id, $hash, $path, $fullFile);
-                continue;
-            }
-
             $files[$hash] = $fullFile;
             $this->scanned++;
         }
@@ -150,63 +157,86 @@ class ImportMediaService
     private function importFiles(array $files): void
     {
         foreach ($files as $hash => $file) {
+            $itemId = 0;
+
             try {
                 $fileInfo = new SplFileInfo($file);
                 $path = str_replace(config('raw-files.path'), '', $fileInfo->getPath());
-                $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-                $type = getimagesize($file) || $extension == 'heic' ? "image" : "video";
+                $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+                $type = $extension == self::HEIC_TYPE || getimagesize($file) ? "image" : "video";
+
+                $ogItem = Item::select('id')
+                    ->whereHash($hash)
+                    ->first();
 
                 $item = Item::updateOrCreate([
                     'hash' => $hash,
                     'og_path' => $path,
                 ], [
                     'og_file' => $fileInfo->getFilename(),
-                    'type' => $type
+                    'type' => $type,
+                    'active' => true,
+                    'og_item_id' => $ogItem?->id,
+                    'exif' => $this->getExif($file),
                 ]);
 
-                $item->events()->updateOrCreate([
-                    'item_id' => $item->id,
-                    'action' => 'imported'
-                ], [
-                    'requester' => ImportMediaService::class
-                ]);
+                $itemId = $item->id;
+
+                // If we get a file in HEIC format, send to a job to convert to JPG
+                if ($extension == self::HEIC_TYPE) {
+                    ConvertHeicToJpgJob::dispatch($itemId, $file)->onQueue('media');
+                    $this->imported++;
+                    continue;
+                }
 
                 $item->addMedia($file)
                     ->preservingOriginal()
                     ->toMediaCollection($type);
 
-                $item->events()->updateOrCreate([
-                    'item_id' => $item->id,
-                    'action' => 'media added'
-                ], [
-                    'requester' => ImportMediaService::class
-                ]);
-
                 $this->imported++;
             } catch (Exception $e) {
-                Log::error($e->getMessage());
+                Item::disable($itemId);
+
+                $message = "$file got error: " . $e->getMessage();
+                Log::error($message);
+
+                if (app()->runningInConsole()) {
+                    echo $message . PHP_EOL;
+                }
             }
         }
     }
 
     /**
-     * saveDuplicate Method.
+     * getExif Method.
      *
-     * @param int $itemId
-     * @param string $fileHash
-     * @param string $path
-     * @param string $fullFile
-     * @return void
+     * @param string $file
+     * @return array
      */
-    private function saveDuplicate(int $itemId, string $fileHash, string $path, string $fullFile): void
+    private function getExif(string $file): array
     {
-        $fileInfo = new SplFileInfo($fullFile);
-        Duplicate::updateOrCreate([
-            'item_id' => $itemId,
-            'hash' => $fileHash,
-            'og_path' => $path,
-        ],[
-            'og_file' => $fileInfo->getFilename(),
-        ]);
+        $fileInfo = new SplFileInfo($file);
+        $baseData = [
+            'full_path' => $fileInfo->getRealPath() ?? $file,
+            'path' => $fileInfo->getPath(),
+            'file_name' => $fileInfo->getFilename(),
+            'extension' => $fileInfo->getExtension(),
+            'size' => $fileInfo->getSize(),
+            'modified_at' => $fileInfo->getMTime(),
+        ];
+
+        try {
+            $data = exif_read_data($file);
+            if (!empty($data)) {
+                return array_merge($baseData, $data);
+            }
+        } catch (Exception) {   }
+
+        try {
+            $data = $this->prober->format($file)->all();
+            return array_merge($baseData, $data);
+        } catch (Exception) {
+            return $baseData;
+        }
     }
 }

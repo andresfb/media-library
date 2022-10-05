@@ -31,7 +31,7 @@ class ImportMediaCommand extends Command
     public function handle(): int
     {
         try {
-            if ($this->confirm("Send job to Queue", !config('app.debug'))) {
+            if ($this->confirm("Send job to Queue")) {
                 ImportMediaJob::dispatch()
                     ->onQueue('ingestor');
 
@@ -39,8 +39,9 @@ class ImportMediaCommand extends Command
                 return 0;
             }
 
+            $howMany = (int) $this->ask("How many", config('raw-files.max_files'));
             $job = new ImportMediaService();
-            $job->execute();
+            $job->execute($howMany);
 
             $this->info("\nDone\n");
             return 0;

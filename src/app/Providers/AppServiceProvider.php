@@ -2,9 +2,7 @@
 
 namespace App\Providers;
 
-use App\Services\ContentOrchestratorService;
-use App\Services\GeneratePostsService;
-use App\Services\ImportContentOrchestratorService;
+use App\Services\ConvertHeicToJpgService;
 use App\Services\ImportMediaService;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,16 +19,8 @@ class AppServiceProvider extends ServiceProvider
             return new ImportMediaService();
         });
 
-        $this->app->bind(GeneratePostsService::class, function () {
-            return new GeneratePostsService(new ContentOrchestratorService);
-        });
-
-        $this->app->bind(ContentOrchestratorService::class, function () {
-            return new ContentOrchestratorService();
-        });
-
-        $this->app->bind(ImportContentOrchestratorService::class, function () {
-            return new ImportContentOrchestratorService();
+        $this->app->bind(ConvertHeicToJpgService::class, function () {
+            return new ConvertHeicToJpgService();
         });
     }
 
