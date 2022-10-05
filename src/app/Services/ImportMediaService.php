@@ -2,12 +2,10 @@
 
 namespace App\Services;
 
-use App\Models\Duplicate;
 use App\Models\Item;
 use Exception;
+use FFMpeg\FFProbe;
 use Illuminate\Support\Facades\Log;
-use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
-use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 use SplFileInfo;
 
 class ImportMediaService
@@ -24,6 +22,14 @@ class ImportMediaService
     /** @var int */
     private int $imported = 0;
 
+    /** @var FFProbe */
+    private FFProbe $prober;
+
+
+    public function __construct()
+    {
+        $this->prober = FFProbe::create();
+    }
 
     /**
      * execute Method.
@@ -151,16 +157,14 @@ class ImportMediaService
             try {
                 $fileInfo = new SplFileInfo($file);
                 $path = str_replace(config('raw-files.path'), '', $fileInfo->getPath());
-                $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+                $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
                 $type = $extension == 'heic'
                     ? 'heic'
                     : (getimagesize($file) ? "image" : "video");
 
                 $ogItem = Item::select('id')
                     ->whereHash($hash)
-                    ->first()
-                    ->pluck('id')
-                    ->toArray();
+                    ->first();
 
                 $item = Item::updateOrCreate([
                     'hash' => $hash,
@@ -169,7 +173,8 @@ class ImportMediaService
                     'og_file' => $fileInfo->getFilename(),
                     'type' => $type,
                     'active' => true,
-                    'og_item_id' => $ogItem ?? null,
+                    'og_item_id' => $ogItem?->id,
+                    'exif' => $this->getExif($file),
                 ]);
 
                 $item->addMedia($file)
@@ -178,8 +183,45 @@ class ImportMediaService
 
                 $this->imported++;
             } catch (Exception $e) {
-                Log::error($e->getMessage());
+                $message = "$file got error: " . $e->getMessage();
+                Log::error($message);
+                if (app()->runningInConsole()) {
+                    echo $message . PHP_EOL;
+                }
             }
+        }
+    }
+
+    /**
+     * getExif Method.
+     *
+     * @param string $file
+     * @return array
+     */
+    private function getExif(string $file): array
+    {
+        $fileInfo = new SplFileInfo($file);
+        $baseData = [
+            'full_path' => $fileInfo->getRealPath() ?? $file,
+            'path' => $fileInfo->getPath(),
+            'file_name' => $fileInfo->getFilename(),
+            'extension' => $fileInfo->getExtension(),
+            'size' => $fileInfo->getSize(),
+            'modfied_at' => $fileInfo->getMTime(),
+        ];
+
+        try {
+            $data = exif_read_data($file);
+            if (!empty($data)) {
+                return array_merge($baseData, $data);
+            }
+        } catch (Exception) {   }
+
+        try {
+            $data = $this->prober->format($file)->all();
+            return array_merge($baseData, $data);
+        } catch (Exception) {
+            return $baseData;
         }
     }
 }
