@@ -25,14 +25,6 @@ class ImportMediaService
     /** @var int */
     private int $imported = 0;
 
-    /** @var FFProbe */
-    private FFProbe $prober;
-
-
-    public function __construct()
-    {
-        $this->prober = FFProbe::create();
-    }
 
     /**
      * execute Method.
@@ -236,7 +228,8 @@ class ImportMediaService
         } catch (Exception) {   }
 
         try {
-            $data = $this->prober->format($file)->all();
+            $prober = FFProbe::create();
+            $data = $prober->format($file)->all();
             return array_merge($baseData, $data);
         } catch (Exception) {
             return $baseData;
