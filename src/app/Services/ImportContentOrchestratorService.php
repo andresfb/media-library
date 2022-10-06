@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Services\ImportContent\BibleImportService;
 use App\Services\ImportContent\ImportServiceInterface;
+use App\Services\ImportContent\QuotesImportService;
 use Intervention\Image\Exception\InvalidArgumentException;
 
 class ImportContentOrchestratorService
@@ -15,6 +16,7 @@ class ImportContentOrchestratorService
     {
         $this->options = [
             BibleImportService::IMPORTER_KEY => BibleImportService::class,
+            QuotesImportService::IMPORTER_KEY => QuotesImportService::class,
         ];
     }
 
