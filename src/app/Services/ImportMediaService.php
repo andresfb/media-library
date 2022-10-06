@@ -45,7 +45,10 @@ class ImportMediaService
     {
         Log::info("Media import started at " . now()->toDateTimeString());
 
-        $this->maxFiles = $howMany ?? (int) config('raw-files.max_files');
+        $this->maxFiles = empty($howMany)
+            ? (int) config('raw-files.max_files')
+            : $howMany;
+
         $path = $this->getLatestImported();
         $files = $this->scanPath($path);
 
