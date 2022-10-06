@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c8cf6bd469fac4a0e0632a9e74c76b9b",
+    "content-hash": "5a56009f33e9ff0252a519c375b3812c",
     "packages": [
         {
             "name": "brick/math",
@@ -1027,6 +1027,82 @@
                 }
             ],
             "time": "2022-05-21T17:30:32+00:00"
+        },
+        {
+            "name": "laragear/cache-query",
+            "version": "v3.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Laragear/CacheQuery.git",
+                "reference": "4d8670a860866ebb0d5788eb379cfe5f804e8823"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Laragear/CacheQuery/zipball/4d8670a860866ebb0d5788eb379cfe5f804e8823",
+                "reference": "4d8670a860866ebb0d5788eb379cfe5f804e8823",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/cache": "9.*",
+                "illuminate/config": "9.*",
+                "illuminate/container": "9.*",
+                "illuminate/contracts": "9.*",
+                "illuminate/database": "9.*",
+                "illuminate/support": "9.*",
+                "php": "^8.0.2"
+            },
+            "require-dev": {
+                "orchestra/testbench": "7.*",
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Laragear\\CacheQuery\\CacheQueryServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laragear\\CacheQuery\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Italo Baeza C.",
+                    "email": "DarkGhostHunter@Gmail.com",
+                    "homepage": "https://patreon.com/packagesforlaravel"
+                }
+            ],
+            "description": "Remember your query results using only one method. Yes, only one.",
+            "support": {
+                "issues": "https://github.com/laragear/cache-query/issues",
+                "source": "https://github.com/laragear/cache-query"
+            },
+            "funding": [
+                {
+                    "url": "https://www.buymeacoffee.com/darkghosthunter",
+                    "type": "Buy me a cofee"
+                },
+                {
+                    "url": "https://ko-fi.com/DarkGhostHunter",
+                    "type": "Ko-Fi"
+                },
+                {
+                    "url": "https://patreon.com/PackagesForLaravel",
+                    "type": "Patreon"
+                },
+                {
+                    "url": "https://paypal.me/darkghosthunter",
+                    "type": "Paypal"
+                }
+            ],
+            "time": "2022-06-10T05:21:56+00:00"
         },
         {
             "name": "laravel/framework",

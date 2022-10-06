@@ -4,39 +4,21 @@ namespace App\Services\Content;
 
 use App\Models\Bible;
 
-class BibleContentService implements ContentServiceInterface
+class BibleContentService extends BaseContentService implements ContentServiceInterface
 {
-    private array $records;
-
-    private Bible $current;
-
     private string $field = "";
 
-
-    /**
-     * loadRecords Method.
-     *
-     * @param int $total
-     * @return void
-     */
-    public function loadRecords(int $total): void
+    public function __construct()
     {
-        $this->records = Bible::where('used', '<=', 10)
-            ->inRandomOrder()
-            ->limit($total)
-            ->get()
-            ->all();
+        $this->class = Bible::class;
+        parent::__construct();
     }
 
-    /**
-     * next Method.
-     *
-     * @return bool
-     */
+    /** @inheritDoc */
     public function next(): bool
     {
-        $this->current = array_shift($this->records);
-        if (empty($this->current)) {
+        $next = parent::next();
+        if (empty($next)) {
             return false;
         }
 
@@ -71,25 +53,5 @@ class BibleContentService implements ContentServiceInterface
                 ->where('key', $this->field)
                 ->first()['value'],
         );
-    }
-
-    /**
-     * getTag Method.
-     *
-     * @return string
-     */
-    public function getTag(): string
-    {
-        return "Bible";
-    }
-
-    /**
-     * markUsed Method.
-     *
-     * @return void
-     */
-    public function markUsed(): void
-    {
-        $this->current->increment('used');
     }
 }

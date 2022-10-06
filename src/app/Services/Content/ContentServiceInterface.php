@@ -14,5 +14,7 @@ interface ContentServiceInterface
 
     public function loadRecords(int $total): void;
 
+    public function getTotal(): int;
+
     public function markUsed(): void;
 }

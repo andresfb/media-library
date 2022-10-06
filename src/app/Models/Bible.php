@@ -9,18 +9,18 @@ use Illuminate\Support\Facades\DB;
 
 class Bible extends Model
 {
-    private Collection $tableInfo;
+    /** @var bool */
+    public $timestamps = false;
 
     /** @var array */
     protected $guarded = [];
 
     /** @var string[] */
     protected $casts = [
-        'used' => 'int'
+        'used' => 'integer'
     ];
 
-    /** @var bool */
-    public $timestamps = false;
+    private Collection $tableInfo;
 
     /**
      * getRandomField Method.

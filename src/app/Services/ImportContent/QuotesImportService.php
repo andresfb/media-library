@@ -2,6 +2,7 @@
 
 namespace App\Services\ImportContent;
 
+use App\Models\Quote;
 use Illuminate\Support\Collection;
 
 class QuotesImportService extends TsvImporting implements ImportServiceInterface
@@ -18,9 +19,14 @@ class QuotesImportService extends TsvImporting implements ImportServiceInterface
         if (empty($values[0])) {
             return;
         }
-//
-//        $first = (int) $values[0];
-//        $i =
+
+        Quote::updateOrCreate([
+            'hash' => md5($values[0])
+        ],[
+            'quote' => $values[0],
+            'author' => $values[1],
+            'category' => $values[2],
+        ]);
 
         $this->progress();
     }

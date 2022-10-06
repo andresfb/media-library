@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Services\Content\BibleContentService;
 use App\Services\Content\ContentServiceInterface;
+use App\Services\Content\QuoteContentService;
 
 class ContentOrchestratorService
 {
@@ -11,8 +12,9 @@ class ContentOrchestratorService
 
     private array $sources = [];
 
-    private ContentServiceInterface $service;
+    private ?ContentServiceInterface $service = null;
 
+    private bool $loaded = false;
 
     public function __construct()
     {
@@ -26,7 +28,7 @@ class ContentOrchestratorService
      */
     public function next(): bool
     {
-        if (empty($this->sources)) {
+        if (!$this->loaded) {
             $this->loadSources();
         }
 
@@ -34,8 +36,8 @@ class ContentOrchestratorService
             return true;
         }
 
-        $source = array_shift($this->sources);
-        if (empty($source)) {
+        $this->service = array_shift($this->sources);
+        if (empty($this->service)) {
             return false;
         }
 
@@ -99,13 +101,24 @@ class ContentOrchestratorService
     {
         $this->sources = [
             new BibleContentService(),
+            new QuoteContentService(),
         ];
 
-        $perService = ceil($this->total / count($this->sources));
+        // Count how many records we have in all sources
+        $totalRecords = 0;
+        /** @var ContentServiceInterface $source */
         foreach ($this->sources as $source) {
+            $totalRecords += $source->getTotal();
+        }
+
+        // Get the total random records each source will generate
+        // proportional of how many it has
+        foreach ($this->sources as $source) {
+            $perService = ceil($this->total * ($source->getTotal() / $totalRecords));
             $source->loadRecords($perService);
         }
 
         $this->service = array_shift($this->sources);
+        $this->loaded = true;
     }
 }

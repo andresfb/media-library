@@ -75,18 +75,13 @@ class GeneratePostsService
                 ]);
 
                 $post->attachTag($this->service->getTag());
-
-                $item->events()->updateOrCreate([
-                    'item_id' => $item->id,
-                    'action' => 'posted'
-                ], [
-                    'requester' => GeneratePostsService::class
-                ]);
-
                 $this->service->markUsed();
                 $this->generated++;
             } catch (Exception $e) {
                 Log::error($e->getMessage());
+                if (app()->runningInConsole()) {
+                    echo $e->getMessage() . PHP_EOL;
+                }
             }
         }
     }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\ConvertDateTimeToTimezone;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -67,6 +68,22 @@ class Item extends Model implements HasMedia
         $this->addMediaCollection('image')
             ->singleFile()
             ->useDisk('media');
+    }
+
+    /**
+     * scopeUnused Method.
+     *
+     * @param Builder $query
+     * @param string $type
+     * @param int $limit
+     * @return Builder
+     */
+    public function scopeUnused(Builder $query, int $limit): Builder
+    {
+        return $query->join('posts', 'items.id', '=', 'posts.item_id', 'left outer')
+            ->whereNull('posts.id')
+            ->inRandomOrder()
+            ->limit($limit);
     }
 
     /**
