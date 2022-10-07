@@ -30,10 +30,11 @@ class ImportMediaService
      * execute Method.
      *
      * @param int $howMany
+     * @param string $path
      * @return void
      * @throws Exception
      */
-    public function execute(int $howMany = 0): void
+    public function execute(int $howMany = 0, string $path = ""): void
     {
         Log::info("Media import started at " . now()->toDateTimeString());
 
@@ -41,9 +42,11 @@ class ImportMediaService
             ? (int) config('raw-files.max_files')
             : $howMany;
 
-        $path = $this->getLatestImported();
-        $files = $this->scanPath($path);
+        if (empty($path)) {
+            $path = $this->getLatestImported();
+        }
 
+        $files = $this->scanPath($path);
         if (empty($files)) {
             throw new Exception("No files found to import");
         }
@@ -110,6 +113,10 @@ class ImportMediaService
         }
 
         $baseFolder = $this->baseFolders[$position];
+        if (app()->runningInConsole()) {
+            echo $baseFolder . PHP_EOL;
+        }
+
         $scans = array_diff(scandir($baseFolder, SCANDIR_SORT_ASCENDING), ['.', '..']);
         if (empty($scans)) {
             return $this->scanFiles(++$position, $files);
@@ -158,8 +165,14 @@ class ImportMediaService
                 $fileInfo = new SplFileInfo($file);
                 $path = str_replace(config('raw-files.path'), '', $fileInfo->getPath());
                 $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-                $type = $extension == self::HEIC_TYPE || getimagesize($file) ? "image" : "video";
 
+                try {
+                    $imageSize = getimagesize($file);
+                } catch (Exception) {
+                    $imageSize = true;
+                }
+
+                $type = $extension == self::HEIC_TYPE || $imageSize ? "image" : "video";
                 $ogItem = Item::select('id')
                     ->whereHash($hash)
                     ->first();
@@ -172,7 +185,6 @@ class ImportMediaService
                     'type' => $type,
                     'active' => true,
                     'og_item_id' => $ogItem?->id,
-                    'exif' => $this->getExif($file),
                 ]);
 
                 $itemId = $item->id;
@@ -199,40 +211,6 @@ class ImportMediaService
                     echo $message . PHP_EOL;
                 }
             }
-        }
-    }
-
-    /**
-     * getExif Method.
-     *
-     * @param string $file
-     * @return array
-     */
-    private function getExif(string $file): array
-    {
-        $fileInfo = new SplFileInfo($file);
-        $baseData = [
-            'full_path' => $fileInfo->getRealPath() ?? $file,
-            'path' => $fileInfo->getPath(),
-            'file_name' => $fileInfo->getFilename(),
-            'extension' => $fileInfo->getExtension(),
-            'size' => $fileInfo->getSize(),
-            'modified_at' => $fileInfo->getMTime(),
-        ];
-
-        try {
-            $data = exif_read_data($file);
-            if (!empty($data)) {
-                return array_merge($baseData, $data);
-            }
-        } catch (Exception) {   }
-
-        try {
-            $prober = FFProbe::create();
-            $data = $prober->format($file)->all();
-            return array_merge($baseData, $data);
-        } catch (Exception) {
-            return $baseData;
         }
     }
 }

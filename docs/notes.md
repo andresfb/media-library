@@ -31,6 +31,36 @@ public function __invoke(Request $request, Media $media)
     );
 }
 ```
+3. Get extended Exif data
+```
+    private function getExif(string $file): array
+    {
+        $fileInfo = new SplFileInfo($file);
+        $baseData = [
+            'full_path' => $fileInfo->getRealPath() ?? $file,
+            'path' => $fileInfo->getPath(),
+            'file_name' => $fileInfo->getFilename(),
+            'extension' => $fileInfo->getExtension(),
+            'size' => $fileInfo->getSize(),
+            'modified_at' => $fileInfo->getMTime(),
+        ];
+
+        try {
+            $data = exif_read_data($file);
+            if (!empty($data)) {
+                return array_merge($baseData, $data);
+            }
+        } catch (Exception) {   }
+
+        try {
+            $prober = FFProbe::create();
+            $data = $prober->format($file)->all();
+            return array_merge($baseData, $data);
+        } catch (Exception) {
+            return $baseData;
+        }
+    }
+```
 
 ### Not Implemented
 - [x] <del>Create a job to scan all the imported files and add the exif data to the items table (EXIF for images, FFPROB for videos).</del>
