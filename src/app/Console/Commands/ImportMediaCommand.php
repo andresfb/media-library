@@ -40,8 +40,10 @@ class ImportMediaCommand extends Command
             }
 
             $howMany = (int) $this->ask("How many", config('raw-files.max_files'));
+            $folder = $this->askForPath();
+
             $job = new ImportMediaService();
-            $job->execute($howMany);
+            $job->execute($howMany, $folder);
 
             $this->info("\nDone\n");
             return 0;
@@ -51,5 +53,24 @@ class ImportMediaCommand extends Command
             $this->info("");
             return 1;
         }
+    }
+
+    /**
+     * askForPath Method.
+     *
+     * @return string
+     * @throws Exception
+     */
+    private function askForPath(): string
+    {
+        $folder = trim($this->ask("Starter Folder", ''));
+        if (!empty($folder)) {
+            $basePath = config('raw-files.path') . $folder;
+            if (!file_exists($basePath)) {
+                throw new Exception("$basePath not found");
+            }
+        }
+
+        return $folder;
     }
 }
