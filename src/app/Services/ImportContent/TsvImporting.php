@@ -63,18 +63,4 @@ abstract class TsvImporting
 
         $this->setMessages(sprintf("Imported %d items", $count - 1));
     }
-
-    /**
-     * output Method.
-     *
-     * @return void
-     */
-    protected function progress(): void
-    {
-        if (!app()->runningInConsole()) {
-            return;
-        }
-
-        echo ".";
-    }
 }

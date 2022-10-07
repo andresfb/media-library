@@ -4,7 +4,7 @@ namespace App\Traits;
 
 trait Messageble
 {
-    private string $messages = "";
+    private array $messages = [];
 
     /**
      * getMessages Method.
@@ -13,7 +13,7 @@ trait Messageble
      */
     public function getMessages(): string
     {
-        return $this->messages;
+        return collect($this->messages)->implode("\n");
     }
 
     /**
@@ -21,6 +21,20 @@ trait Messageble
      */
     public function setMessages(string $messages): void
     {
-        $this->messages = $messages;
+        $this->messages[] = $messages;
+    }
+
+    /**
+     * output Method.
+     *
+     * @return void
+     */
+    protected function progress(): void
+    {
+        if (!app()->runningInConsole()) {
+            return;
+        }
+
+        echo ".";
     }
 }

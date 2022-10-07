@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Services\ImportContentOrchestratorService;
+use App\Services\ImportContent\ImportContentOrchestratorService;
 use Illuminate\Console\Command;
 
 class ImportContentCommand extends Command
