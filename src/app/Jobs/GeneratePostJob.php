@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Models\Post;
+use App\Services\GeneratePostsService;
 use App\Services\ImportMediaService;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -11,19 +13,20 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class ImportMediaJob implements ShouldQueue
+class GeneratePostJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private ImportMediaService $service;
+    private GeneratePostsService $service;
 
-    public function __construct(ImportMediaService $service)
+
+    public function __construct(GeneratePostsService $service = null)
     {
-        $this->service = $service;
+        $this->service = $service ?? resolve(GeneratePostsService::class);
     }
 
     /**
-     * Execute the job.
+     * handle Method.
      *
      * @return void
      * @throws Exception
