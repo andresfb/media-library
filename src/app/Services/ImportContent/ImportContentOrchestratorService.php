@@ -18,6 +18,8 @@ class ImportContentOrchestratorService
             QuranImportService::IMPORTER_KEY => QuranImportService::class,
             HistoryImportService::IMPORTER_KEY => HistoryImportService::class,
             BirthdaysImportService::IMPORTER_KEY => BirthdaysImportService::class,
+            DictionaryImportService::IMPORTER_KEY => DictionaryImportService::class,
+            WordsImportServices::IMPORTER_KEY => WordsImportServices::class,
         ];
     }
 

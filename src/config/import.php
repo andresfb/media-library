@@ -2,6 +2,7 @@
 
 use App\Services\ImportContent\BibleImportService;
 use App\Services\ImportContent\BirthdaysImportService;
+use App\Services\ImportContent\DictionaryImportService;
 use App\Services\ImportContent\HistoryImportService;
 use App\Services\ImportContent\JokesImportService;
 use App\Services\ImportContent\QuotesImportService;
@@ -35,5 +36,9 @@ return [
 
     BirthdaysImportService::IMPORTER_KEY => [
         'file' => storage_path('app/upload/famousbirthdays.sql'),
+    ],
+
+    DictionaryImportService::IMPORTER_KEY => [
+        'file' => storage_path('app/upload/wordnet20-from-prolog-all-3.sql'),
     ],
 ];
