@@ -97,6 +97,7 @@ class ContentOrchestratorService
     {
         $this->sources = [
             new JokeContentService(),
+            new WordsContentService(),
             new QuoteContentService(),
             new BibleContentService(),
             new QuranContentService(),

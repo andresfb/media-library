@@ -38,14 +38,15 @@ class JokeContentService extends BaseContentService implements ContentServiceInt
         $jokeBase = $this->cleanString($this->current->body);
         $title = $this->cleanString($this->current->title);
         $joke = strlen($title) > 40 && !str_contains($jokeBase, $title)
-            ? sprintf("%s\n\n%s", $title, $this->current->body)
+            ? $title . "\n\n" . $this->current->body
             : $this->current->body;
 
-        return sprintf(
-            "**Category:** *%s*\n\n%s",
+        $category = sprintf(
+            "**Category:** *%s*",
             $this->current->category,
-            $joke,
         );
+
+        return $joke . "\n\n" . $category;
     }
 
     /**

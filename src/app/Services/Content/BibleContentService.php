@@ -46,12 +46,13 @@ class BibleContentService extends BaseContentService implements ContentServiceIn
      */
     public function getText(): string
     {
-        return sprintf(
-            "%s\n\n*—%s*",
-            $this->current->{$this->field},
+        $book = sprintf(
+            "*—%s*",
             $this->current->getTableInfo()
                 ->where('key', $this->field)
                 ->first()['value'],
         );
+
+        return $this->current->{$this->field} . "\n\n" . $book;
     }
 }

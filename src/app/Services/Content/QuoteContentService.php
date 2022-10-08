@@ -29,11 +29,12 @@ class QuoteContentService extends BaseContentService implements ContentServiceIn
      */
     public function getText(): string
     {
-        return sprintf(
-            "%s\n\n*—[%s](%s)*",
-            $this->current->quote,
+        $author = sprintf(
+            "*—[%s](%s)*",
             $this->current->author,
             config('posts.search_url') . urlencode($this->current->author)
         );
+
+        return $this->current->quote . "\n\n" . $author;
     }
 }

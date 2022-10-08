@@ -33,10 +33,15 @@ class QuranContentService extends BaseContentService implements ContentServiceIn
      */
     public function getText(): string
     {
-        return sprintf(
-            "**Verse %s**\n\n%s\n\n*—Marmaduke Pickthall’s English Translation (1930)*",
+        $verseId = sprintf(
+            "**Verse %s**",
             $this->current->verse_id,
-            $this->current->verse
         );
+
+        return $verseId
+            . "\n\n"
+            . $this->current->verse
+            . "\n\n"
+            . "*—Marmaduke Pickthall’s English Translation (1930)*";
     }
 }
