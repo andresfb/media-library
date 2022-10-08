@@ -53,7 +53,7 @@ class BaseContentService
 
         $this->totalRecords = $this->model
             ->where('used', '<=', 10)
-            ->cache(18000)
+            ->cache(604800)
             ->count();
 
         return $this->totalRecords;

@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Joke;
 use DOMDocument;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 use pcrov\JsonReader\JsonReader;
 use XMLReader;
 

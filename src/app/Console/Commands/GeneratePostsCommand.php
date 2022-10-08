@@ -2,8 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\GeneratePostJob;
-use App\Services\ContentOrchestratorService;
 use App\Services\GeneratePostsService;
 use Exception;
 use Illuminate\Console\Command;

@@ -4,6 +4,7 @@ namespace App\Services\ImportContent;
 
 use App\Models\Joke;
 use App\Traits\Messageble;
+use Illuminate\Support\Str;
 use pcrov\JsonReader\Exception;
 use pcrov\JsonReader\InputStream\IOException;
 use pcrov\JsonReader\InvalidArgumentException;
@@ -65,12 +66,30 @@ class JokesImportService implements ImportServiceInterface
                 continue;
             }
 
+            if (empty($data["title"])) {
+                $title = 'Stupid Stuff';
+            } else {
+                $title = Str::of($data["title"])
+                    ->replace(['\u201c', '\u201d'], '"')
+                    ->replace(['\u2018', '\u2019'], "'")
+                    ->replace(['|', '*', '...'], '')
+                    ->trim()
+                    ->toString();
+            }
+
+            $joke = Str::of($data["body"])
+                ->replace(['\u201c', '\u201d'], '"')
+                ->replace(['\u2018', '\u2019'], "'")
+                ->replace(['|', '*'], '')
+                ->trim()
+                ->toString();
+
             Joke::updateOrCreate([
                 'hash' => md5($fileName . $data['id']),
             ],[
                 'category' => $data["category"] ?? 'Reddit',
-                'title' => $data["title"] ?? 'Stupid Stuff',
-                'body' => $data["body"],
+                'title' => $title,
+                'body' => $joke,
                 'used' => false,
             ]);
 

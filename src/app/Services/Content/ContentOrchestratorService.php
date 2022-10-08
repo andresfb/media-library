@@ -1,10 +1,6 @@
 <?php
 
-namespace App\Services;
-
-use App\Services\Content\BibleContentService;
-use App\Services\Content\ContentServiceInterface;
-use App\Services\Content\QuoteContentService;
+namespace App\Services\Content;
 
 class ContentOrchestratorService
 {
@@ -100,8 +96,9 @@ class ContentOrchestratorService
     private function loadSources(): void
     {
         $this->sources = [
-            new BibleContentService(),
+            new JokeContentService(),
             new QuoteContentService(),
+            new BibleContentService(),
         ];
 
         // Count how many records we have in all sources
