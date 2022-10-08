@@ -12,6 +12,8 @@ class Bible extends Model
     /** @var bool */
     public $timestamps = false;
 
+    protected $table = "cnt_bibles";
+
     /** @var array */
     protected $guarded = [];
 

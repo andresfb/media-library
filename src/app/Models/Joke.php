@@ -8,6 +8,8 @@ class Joke extends Model
 {
     public $timestamps = false;
 
+    protected $table = "cnt_jokes";
+
     /** @var array */
     protected $guarded = [];
 

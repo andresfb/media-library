@@ -10,7 +10,7 @@ class Quran extends Model
     public $timestamps = false;
 
     /** @var string */
-    protected $table = 'quran';
+    protected $table = 'cnt_quran';
 
     /** @var array */
     protected $guarded = [];

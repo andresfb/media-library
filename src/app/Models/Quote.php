@@ -8,6 +8,8 @@ class Quote extends Model
 {
     public $timestamps = false;
 
+    protected $table = "cnt_quotes";
+
     /** @var array */
     protected $guarded = [];
 
