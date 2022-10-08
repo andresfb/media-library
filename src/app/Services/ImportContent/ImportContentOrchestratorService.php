@@ -15,6 +15,7 @@ class ImportContentOrchestratorService
             BibleImportService::IMPORTER_KEY => BibleImportService::class,
             QuotesImportService::IMPORTER_KEY => QuotesImportService::class,
             JokesImportService::IMPORTER_KEY => JokesImportService::class,
+            QuranImportService::IMPORTER_KEY => QuranImportService::class,
         ];
     }
 

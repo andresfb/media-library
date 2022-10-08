@@ -3,6 +3,7 @@
 use App\Services\ImportContent\BibleImportService;
 use App\Services\ImportContent\JokesImportService;
 use App\Services\ImportContent\QuotesImportService;
+use App\Services\ImportContent\QuranImportService;
 
 return [
 
@@ -20,5 +21,9 @@ return [
             storage_path('app/upload/stupidstuff.json'),
             storage_path('app/upload/wocka.json'),
         ]
-    ]
+    ],
+
+    QuranImportService::IMPORTER_KEY => [
+        'file' => storage_path('app/upload/quran-english-pickthall.json'),
+    ],
 ];
