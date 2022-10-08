@@ -99,6 +99,7 @@ class ContentOrchestratorService
             new JokeContentService(),
             new QuoteContentService(),
             new BibleContentService(),
+            new QuranContentService(),
         ];
 
         // Count how many records we have in all sources

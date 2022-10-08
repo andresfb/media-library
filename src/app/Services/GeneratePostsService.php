@@ -38,6 +38,7 @@ class GeneratePostsService
 
         $items = Item::select("items.*")
             ->unused($howMany)
+            ->whereNull('og_item_id')
             ->get();
 
         $this->generatePosts($items);
