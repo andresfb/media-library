@@ -101,6 +101,7 @@ class ContentOrchestratorService
             new BibleContentService(),
             new QuranContentService(),
             new HistoryContentService(),
+            new BirthdayContentService(),
         ];
 
         // Count how many records we have in all sources
