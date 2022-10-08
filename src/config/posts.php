@@ -6,6 +6,6 @@ return [
 
     'max_random_posts' => env('MAX_RANDOM_POSTS', 500),
 
-    'max_content_reuse' => env('MAX_CONTENT_REUSE', 5),
+    'max_content_reuse' => env('MAX_CONTENT_REUSE', 3),
 
 ];

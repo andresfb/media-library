@@ -27,7 +27,7 @@ class HistoryImportService implements ImportServiceInterface
         DB::unprepared(file_get_contents($file));
         $this->updateHash();
 
-        $this->setMessages("Finished importimg history events");
+        $this->setMessages("Finished importing history events");
     }
 
     /**

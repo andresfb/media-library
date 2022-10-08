@@ -1,6 +1,7 @@
 <?php
 
 use App\Services\ImportContent\BibleImportService;
+use App\Services\ImportContent\BirthdaysImportService;
 use App\Services\ImportContent\HistoryImportService;
 use App\Services\ImportContent\JokesImportService;
 use App\Services\ImportContent\QuotesImportService;
@@ -30,5 +31,9 @@ return [
 
     HistoryImportService::IMPORTER_KEY => [
         'file' => storage_path('app/upload/todayinhistory.sql'),
+    ],
+
+    BirthdaysImportService::IMPORTER_KEY => [
+        'file' => storage_path('app/upload/famousbirthdays.sql'),
     ],
 ];
