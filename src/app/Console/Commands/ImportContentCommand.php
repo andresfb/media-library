@@ -36,6 +36,9 @@ class ImportContentCommand extends Command
                 0
             );
 
+            $this->info("Starting import");
+            $this->newLine();
+
             $importer = $this->service->getInstance($option);
             $importer->execute();
 

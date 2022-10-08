@@ -36,6 +36,7 @@ class QuranImportService implements ImportServiceInterface
         }
 
         $reader->close();
+        $this->setMessages("Finished importimg quran verses");
     }
 
     /**

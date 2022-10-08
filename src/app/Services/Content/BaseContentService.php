@@ -14,6 +14,8 @@ class BaseContentService
 
     protected int $totalRecords = 0;
 
+    protected int $maxContentReuse;
+
     protected Model $model;
 
     protected ?Model $current = null;
@@ -23,6 +25,7 @@ class BaseContentService
         $this->model = new $this->class();
         $pieces = explode('\\', $this->class);
         $this->tag = array_pop($pieces);
+        $this->maxContentReuse = (int) config('posts.max_content_reuse');
     }
 
     /**
@@ -33,7 +36,7 @@ class BaseContentService
      */
     public function loadRecords(int $total): void
     {
-        $this->records = $this->model->where('used', '<=', 10)
+        $this->records = $this->model->where('used', '<=', $this->maxContentReuse)
             ->inRandomOrder()
             ->limit($total)
             ->get()
@@ -52,7 +55,7 @@ class BaseContentService
         }
 
         $this->totalRecords = $this->model
-            ->where('used', '<=', 10)
+            ->where('used', '<=', $this->maxContentReuse)
             ->cache(604800)
             ->count();
 

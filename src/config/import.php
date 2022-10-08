@@ -1,6 +1,7 @@
 <?php
 
 use App\Services\ImportContent\BibleImportService;
+use App\Services\ImportContent\HistoryImportService;
 use App\Services\ImportContent\JokesImportService;
 use App\Services\ImportContent\QuotesImportService;
 use App\Services\ImportContent\QuranImportService;
@@ -25,5 +26,9 @@ return [
 
     QuranImportService::IMPORTER_KEY => [
         'file' => storage_path('app/upload/quran-english-pickthall.json'),
+    ],
+
+    HistoryImportService::IMPORTER_KEY => [
+        'file' => storage_path('app/upload/todayinhistory.sql'),
     ],
 ];

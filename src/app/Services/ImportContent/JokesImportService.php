@@ -39,6 +39,8 @@ class JokesImportService implements ImportServiceInterface
                 $this->setMessages($e->getMessage());
             }
         }
+
+        $this->setMessages("Finished importimg jokes");
     }
 
     /**

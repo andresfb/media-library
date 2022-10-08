@@ -14,7 +14,7 @@ class ContentOrchestratorService
 
     public function __construct()
     {
-        $this->total = (int) config('items.max_random_posts');
+        $this->total = (int) config('posts.max_random_posts');
     }
 
     /**

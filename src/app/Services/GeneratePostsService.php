@@ -30,7 +30,7 @@ class GeneratePostsService
     public function execute(int $howMany = 0): void
     {
         if (empty($howMany)) {
-            $howMany = (int) config('items.max_random_posts');
+            $howMany = (int) config('posts.max_random_posts');
         }
 
         Log::info("Generating started. Generating ($howMany) Posts.");
