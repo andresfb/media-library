@@ -2,7 +2,8 @@
 
 ## A system to organize, curate, and display a collection of image and video files.
 
-It uses a **Social Media** styled frontend to show the content randomly, allow *likes*, and assign *tags* to later use for searches and galleries. The **Posts** are generated at random using info from different sources.
+It uses a **Social Media** styled frontend to show the files in random order and allows the user to *like*, assigns *tags*, *search*, and create *galleries*. The **Posts** are generated at random using text from different sources.
+
 
 ### Stack
 1. PHP 8.1
