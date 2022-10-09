@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\GeneratePostJob;
 use App\Jobs\ImportMediaJob;
 use App\Services\ImportMediaService;
 use Illuminate\Console\Scheduling\Schedule;
@@ -17,7 +18,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->job(new ImportMediaJob(), 'ingestor')->everyThirtyMinutes();
+        $schedule->job(new ImportMediaJob(new ImportMediaService()), 'ingestor')
+            ->everyThirtyMinutes();
+
+        $schedule->job(new GeneratePostJob(), 'default')
+            ->twiceDaily();
     }
 
     /**

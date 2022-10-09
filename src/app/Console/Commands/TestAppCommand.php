@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Item;
 use Illuminate\Console\Command;
 
 class TestAppCommand extends Command
@@ -24,17 +23,6 @@ class TestAppCommand extends Command
             $this->info("Starting test");
             $this->newLine();
 
-            $items = Item::select("items.*")
-                ->with('media')
-                ->get();
-
-            foreach ($items as $item) {
-                if (empty($item->media)) {
-                    echo PHP_EOL . $item->id . PHP_EOL;
-                }
-
-                echo ".";
-            }
 
             $this->newLine();
             $this->info("Done");

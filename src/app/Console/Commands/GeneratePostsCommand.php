@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\GeneratePostJob;
 use App\Services\GeneratePostsService;
 use Exception;
 use Illuminate\Console\Command;
@@ -22,7 +23,14 @@ class GeneratePostsCommand extends Command
     public function handle(): int
     {
         try {
-            $howMany = (int) $this->ask("How many posts", 10);
+            if ($this->confirm("Send job to Queue")) {
+                GeneratePostJob::dispatch()->onQueue('default');
+
+                $this->info("\nDone\n");
+                return 0;
+            }
+
+            $howMany = (int) $this->ask("How many posts", 1000);
 
             $service = resolve(GeneratePostsService::class);
             $service->execute($howMany);
