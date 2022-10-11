@@ -4,7 +4,6 @@
 
 It uses a **Social Media** styled frontend to show the files in random order and allows the user to *like*, assigns *tags*, *search*, and create *galleries*. The **Posts** are generated at random using text from different sources.
 
-
 ### Stack
 1. PHP 8.1
 2. Laravel 9.x
@@ -12,6 +11,7 @@ It uses a **Social Media** styled frontend to show the files in random order and
 4. Spatie Media Library 10.x
 5. Spatie Tags 4.x
 6. Livewire 2.x
+7. Tailwind CSS 3.x
 
 ### Post's Sources
 Free, downloadable versions of the following:
@@ -23,3 +23,6 @@ Free, downloadable versions of the following:
 5. Today in History
 6. Famous Birthdays
 7. Dictionary (American English words)
+
+### Tools
+1. Frontend based on the [Minty](https://bootswatch.com/minty/) Bootswatch templete, but ported to Tailwind.

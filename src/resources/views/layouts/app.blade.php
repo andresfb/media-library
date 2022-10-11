@@ -7,11 +7,12 @@
     <meta name="description" content="">
     <meta name="keywords" content="">
     <meta name="author" content="">
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name') }}</title>
-
 </head>
 <body>
-    <h1>Coming soon.</h1>
+    @yield('content')
 </body>
 </html>

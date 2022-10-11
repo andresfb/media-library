@@ -8,4 +8,6 @@ return [
 
     'max_content_reuse' => env('MAX_CONTENT_REUSE', 3),
 
+    'max_daily_posts' => env('MAX_DAILY_POSTS', 500),
+
 ];
