@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\ContentImporters;
 
 use App\Jobs\ConvertHeicToJpgJob;
 use App\Models\Item;
 use Exception;
-use FFMpeg\FFProbe;
 use Illuminate\Support\Facades\Log;
 use SplFileInfo;
 

@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Jobs\ImportMediaJob;
-use App\Services\ImportMediaService;
+use App\Services\ContentImporters\ImportMediaService;
 use Exception;
 use Illuminate\Console\Command;
 

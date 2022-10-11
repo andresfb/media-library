@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Jobs\GeneratePostJob;
-use App\Services\GeneratePostsService;
+use App\Services\ContentGenerators\GeneratePostsService;
 use Exception;
 use Illuminate\Console\Command;
 

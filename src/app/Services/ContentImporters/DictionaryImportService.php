@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\ImportContent;
+namespace App\Services\ContentImporters;
 
 use App\Traits\Messageble;
 use Illuminate\Support\Facades\DB;

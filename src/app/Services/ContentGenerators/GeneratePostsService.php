@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\ContentGenerators;
 
 use App\Models\Item;
 use App\Models\Post;
-use App\Services\Content\ContentOrchestratorService;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;

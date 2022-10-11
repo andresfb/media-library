@@ -4,7 +4,7 @@ namespace App\Console;
 
 use App\Jobs\GeneratePostJob;
 use App\Jobs\ImportMediaJob;
-use App\Services\ImportMediaService;
+use App\Services\ContentImporters\ImportMediaService;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 

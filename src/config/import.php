@@ -1,12 +1,12 @@
 <?php
 
-use App\Services\ImportContent\BibleImportService;
-use App\Services\ImportContent\BirthdaysImportService;
-use App\Services\ImportContent\DictionaryImportService;
-use App\Services\ImportContent\HistoryImportService;
-use App\Services\ImportContent\JokesImportService;
-use App\Services\ImportContent\QuotesImportService;
-use App\Services\ImportContent\QuranImportService;
+use App\Services\ContentImporters\BibleImportService;
+use App\Services\ContentImporters\BirthdaysImportService;
+use App\Services\ContentImporters\DictionaryImportService;
+use App\Services\ContentImporters\HistoryImportService;
+use App\Services\ContentImporters\JokesImportService;
+use App\Services\ContentImporters\QuotesImportService;
+use App\Services\ContentImporters\QuranImportService;
 
 return [
 

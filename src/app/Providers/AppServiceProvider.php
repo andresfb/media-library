@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
+use App\Services\ContentImporters\ImportMediaService;
 use App\Services\ConvertHeicToJpgService;
-use App\Services\ImportMediaService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider

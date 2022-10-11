@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\ImportContent;
+namespace App\Services\ContentImporters;
 
 use App\Models\Quran;
 use App\Traits\Messageble;
