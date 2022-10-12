@@ -73,6 +73,7 @@ class GeneratePostsService
                     'type' => $item->type,
                     'slug' => $slug,
                     'title' => $title,
+//                    'source' => $this->service->getTag(),
                     'content' => $this->service->getText(),
                 ]);
 
