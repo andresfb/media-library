@@ -4,6 +4,7 @@
 1. [Markdown to HTML](https://laravel-news.com/laravel-markdown-to-html-macro)
 
 ### TODO
+- [ ] Add a new Comments table and relate it to Post
 
 ### Completed
 - [x] Add a new 'active' field to Items table and default to true.
