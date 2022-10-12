@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\ContentImporters;
+namespace App\Services;
 
 use App\Jobs\ConvertHeicToJpgJob;
 use App\Models\Item;

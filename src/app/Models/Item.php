@@ -74,7 +74,6 @@ class Item extends Model implements HasMedia
      * scopeUnused Method.
      *
      * @param Builder $query
-     * @param string $type
      * @param int $limit
      * @return Builder
      */

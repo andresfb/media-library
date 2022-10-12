@@ -10,8 +10,9 @@ It uses a **Social Media** styled frontend to show the files in random order and
 3. Laravel Horizon 5.x
 4. Spatie Media Library 10.x
 5. Spatie Tags 4.x
-6. Livewire 2.x
-7. Tailwind CSS 3.x
+6. Spatie View Models 1.x
+7. Livewire 2.x
+8. Tailwind CSS 3.x
 
 ### Post's Sources
 Free, downloadable versions of the following:

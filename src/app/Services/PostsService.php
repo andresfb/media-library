@@ -4,7 +4,9 @@ namespace App\Services;
 
 use App\Models\Post;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
+use LaravelIdea\Helper\App\Models\_IH_Post_QB;
 
 class PostsService
 {
@@ -17,33 +19,34 @@ class PostsService
 
     public function __construct()
     {
-        $this->usedKey = "USED:POSTS";
-        $this->postsKey = "LATEST:POSTS:" . date('Y-m-d');
+        $this->usedKey = md5("USED:POSTS");
+        $this->postsKey = md5("LATEST:POSTS:%s" . date('Y-m-d'));
         $this->maxPosts = (int) config('posts.max_daily_posts');
     }
 
     /**
      * getLatest Method.
      *
-     * @return Collection
+     * @param int $perPage
+     * @return LengthAwarePaginator
      */
-    public function getLatest(): Collection
+    public function getLatest(int $perPage): LengthAwarePaginator
     {
-        /** @var Collection $posts */
+        /** @var LengthAwarePaginator $posts */
         $posts = Cache::get($this->postsKey);
         if (empty($posts)) {
-            return $this->loadPosts($this->maxPosts);
+            return $this->loadPosts($this->maxPosts, $perPage);
         }
 
         $used = Cache::get($this->usedKey);
         if (empty($used)) {
-            return $this->loadPosts($this->maxPosts);
+            return $this->loadPosts($this->maxPosts, $perPage);
         }
 
         $posts = $posts->shift($used)
-            ->append($this->loadPosts($used));
+            ->append($this->loadPosts($used, $perPage));
 
-        Cache::put($posts, now()->addDay());
+        Cache::put(config('posts.cache_posts') ? $posts : [], now()->addDay());
         return $posts;
     }
 
@@ -51,15 +54,20 @@ class PostsService
      * loadPosts Method.
      *
      * @param int $maxPosts
-     * @return Collection
+     * @param int $perPage
+     * @return LengthAwarePaginator
      */
-    private function loadPosts(int $maxPosts): Collection
+    private function loadPosts(int $maxPosts, int $perPage): LengthAwarePaginator
     {
-        return Post::whereStatus(0)
+        return Post::select('posts.*')
+            ->whereStatus(0)
+            ->with('tags')
+            ->join('items', 'posts.item_id', '=', 'items.id')
+            ->where('items.active', true)
             ->with('item')
-            ->with('image.media')
+            ->with('item.media')
             ->inRandomOrder()
             ->limit($maxPosts)
-            ->get();
+            ->paginate($perPage);
     }
 }

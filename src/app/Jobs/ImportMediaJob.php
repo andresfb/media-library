@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Services\ContentImporters\ImportMediaService;
+use App\Services\ImportMediaService;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
