@@ -4,12 +4,12 @@
 1. [Markdown to HTML](https://laravel-news.com/laravel-markdown-to-html-macro)
 
 ### TODO
-- [ ] Add a `source` field to Posts table to see where did the content comes from
 
 ### Completed
 - [x] Add a new 'active' field to Items table and default to true.
 - [x] Install and configure [Horizon](https://laravel.com/docs/9.x/horizon).
 - [x] [HEIC to JPG](https://blog.genijaho.dev/how-to-add-support-for-heic-images-with-imagemagick-in-php)
+- [x] Add a `source` field to Posts table to see where did the content comes from
 
 
 ### Snippets

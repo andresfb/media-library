@@ -8,14 +8,16 @@ return new class extends Migration {
     public function up()
     {
         Schema::table('posts', function (Blueprint $table) {
-
+            $table->string('source', 50)
+                ->after('content')
+                ->nullable();
         });
     }
 
     public function down()
     {
         Schema::table('posts', function (Blueprint $table) {
-            //
+            $table->removeColumn('source');
         });
     }
 };

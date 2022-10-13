@@ -96,13 +96,13 @@ class ContentOrchestratorService
     private function loadSources(): void
     {
         $this->sources = [
-            new JokeContentService(),
-            new WordsContentService(),
-            new QuoteContentService(),
-            new BibleContentService(),
-            new QuranContentService(),
-            new HistoryContentService(),
             new BirthdayContentService(),
+            new HistoryContentService(),
+            new QuranContentService(),
+            new BibleContentService(),
+            new QuoteContentService(),
+            new WordsContentService(),
+            new JokeContentService(),
         ];
 
         // Count how many records we have in all sources
