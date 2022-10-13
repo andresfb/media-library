@@ -36,11 +36,19 @@ class BaseContentService
      */
     public function loadRecords(int $total): void
     {
-        $this->records = $this->model->where('used', '<=', $this->maxContentReuse)
-            ->inRandomOrder()
-            ->limit($total)
-            ->get()
-            ->all();
+        $maxReuse = 1;
+        $records = [];
+
+        while ($maxReuse <= $this->maxContentReuse) {
+            $records = $this->loadData($maxReuse, $total);
+            if (!empty($records)) {
+                break;
+            }
+
+            $maxReuse++;
+        }
+
+        $this->records = $records;
     }
 
     /**
@@ -95,5 +103,21 @@ class BaseContentService
     public function markUsed(): void
     {
         $this->current->increment('used');
+    }
+
+    /**
+     * loadData Method.
+     *
+     * @param int $maxReuse
+     * @param int $total
+     * @return array
+     */
+    private function loadData(int $maxReuse, int $total): array
+    {
+        return $this->model->where('used', '<', $maxReuse)
+            ->inRandomOrder()
+            ->limit($total)
+            ->get()
+            ->all();
     }
 }

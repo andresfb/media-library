@@ -22,7 +22,7 @@ class Kernel extends ConsoleKernel
             ->everyThirtyMinutes();
 
         $schedule->job(new GeneratePostJob(), 'default')
-            ->twiceDaily();
+            ->cron("15 11,17,23 * * *");
     }
 
     /**

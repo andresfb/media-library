@@ -31,7 +31,7 @@ class WordsContentService extends BaseContentService implements ContentServiceIn
     {
         $word = sprintf(
             '**[%s](%s)**',
-            ucfirst($this->current->word),
+            ucwords(str_replace("_", " ", $this->current->word)),
             config('posts.search_url') . urlencode(strtolower($this->current->word)),
         );
 

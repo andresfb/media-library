@@ -72,6 +72,7 @@ class GeneratePostsService
                     'type' => $item->type,
                     'slug' => $slug,
                     'title' => $title,
+                    'source' => strtolower($this->service->getTag()),
                     'content' => $this->service->getText(),
                 ]);
 

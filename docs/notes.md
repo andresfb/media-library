@@ -9,6 +9,7 @@
 - [x] Add a new 'active' field to Items table and default to true.
 - [x] Install and configure [Horizon](https://laravel.com/docs/9.x/horizon).
 - [x] [HEIC to JPG](https://blog.genijaho.dev/how-to-add-support-for-heic-images-with-imagemagick-in-php)
+- [x] Add a `source` field to Posts table to see where did the content comes from
 
 
 ### Snippets
@@ -45,13 +46,13 @@
 
 ### Queries
 ```
-update `bibles` set used = 0;
+update `cnt_bibles` set used = 0;
 update `cnt_birthdays` set used = 0;
 update `cnt_history` set used = 0;
 update `cnt_words` set used = 0;
-update `jokes` set used = 0;
-update `quotes` set used = 0;
-update `quran` set used = 0;
+update `cnt_jokes` set used = 0;
+update `cnt_quotes` set used = 0;
+update `cnt_quran` set used = 0;
 ```
 
 ### Not Implemented
