@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Jobs\ConvertHeicToJpgJob;
 use App\Models\Item;
 use Exception;
-use FFMpeg\FFProbe;
 use Illuminate\Support\Facades\Log;
 use SplFileInfo;
 

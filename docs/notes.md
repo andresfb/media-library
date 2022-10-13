@@ -68,13 +68,13 @@ public function __invoke(Request $request, Media $media)
 
 ### Queries
 ```
-update `bibles` set used = 0;
+update `cnt_bibles` set used = 0;
 update `cnt_birthdays` set used = 0;
 update `cnt_history` set used = 0;
 update `cnt_words` set used = 0;
-update `jokes` set used = 0;
-update `quotes` set used = 0;
-update `quran` set used = 0;
+update `cnt_jokes` set used = 0;
+update `cnt_quotes` set used = 0;
+update `cnt_quran` set used = 0;
 ```
 
 ### Not Implemented
