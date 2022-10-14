@@ -6,6 +6,7 @@
 - [ ] Wire the `loader` div a livewire component to load the next page.
 - [ ] Add the ability to assign new tags.
 - [ ] Move getting the items resolution to a Job to scan the files and save to database (media table as custom properties).
+- [ ] Add a new Comments table and relate it to Post
 
 ### Completed
 - [x] Add a new 'active' field to Items table and default to true.
