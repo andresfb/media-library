@@ -19,10 +19,10 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->job(new ImportMediaJob(new ImportMediaService()), 'ingestor')
-            ->everyThirtyMinutes();
+            ->DailyAt("12:45");
 
         $schedule->job(new GeneratePostJob(), 'default')
-            ->cron("15 11,17,23 * * *");
+            ->cron("15 11,15,19,23 * * *");
     }
 
     /**
