@@ -1,10 +1,12 @@
 # Notes
 
-### To review
-1. [Markdown to HTML](https://laravel-news.com/laravel-markdown-to-html-macro)
-
 ### TODO
-
+- [ ] Add a new Comments table and relate it to Post
+- [ ] Implement the comments.
+- [ ] Wire the `loader` <div> to a livewire component and load the next page of posts.
+- [ ] Add the ability to assign new tags.
+- [ ] Move getting the items resolution to a Job to scan the files and save to database (media table as custom properties).
+    
 ### Completed
 - [x] Add a new 'active' field to Items table and default to true.
 - [x] Install and configure [Horizon](https://laravel.com/docs/9.x/horizon).
@@ -13,29 +15,7 @@
 - [x] Dial down the item import to once every 3 hours.
 
 ### Snippets
-1. Generate a temp signed url
-```
-$link = Illuminate\Support\Facades\URL::temporarySignedRoute(
-    'preview', // route name
-    now()->addMinutes(45), // TTL
-    ['media' => $media->id] // object id
-);
-```
-2. Respond to the temp url
-```
-public function __invoke(Request $request, Media $media)
-{
-    if (!$request->hasValidSignature()) {
-        abort(401);
-    }
-
-    return response()->file(
-        $media->getPath(),
-        ['Content-type' => $media->mime_type]
-    );
-}
-```
-3. Get extended Exif data
+1. Get extended Exif data
 ```
     private function getExif(string $file): array
     {
@@ -83,3 +63,4 @@ update `cnt_quran` set used = 0;
 - [x] <del>Add a Foreign-Id restriction to the og_item_id in the items table.</dev>
 - [x] <del>Add a `duplicates()` relationship top the Item model.<del>
 - [x] <del>Create a job to look for Items without media and try to update them. If it can't disable the Item.</del>
+- [x] <del>Change the Extra Info to load on-demand.</del>

@@ -2,9 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\Post;
-use App\Services\GeneratePostsService;
-use App\Services\ImportMediaService;
+use App\Services\ContentGenerators\GeneratePostsService;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

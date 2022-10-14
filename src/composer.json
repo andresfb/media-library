@@ -6,10 +6,13 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
-        "ext-exif": "*",
+        "ext-gd": "*",
         "ext-dom": "*",
-        "ext-xmlreader": "*",
+        "ext-exif": "*",
+        "ext-imagick": "*",
         "ext-simplexml": "*",
+        "ext-xmlreader": "*",
+        "graham-campbell/markdown": "^14.0",
         "guzzlehttp/guzzle": "^7.2",
         "laragear/cache-query": "^3.0",
         "laravel/framework": "^9.19",
@@ -19,9 +22,11 @@
         "pcrov/jsonreader": "^1.0",
         "php-ffmpeg/php-ffmpeg": "^1.0",
         "spatie/laravel-medialibrary": "^10.0.0",
-        "spatie/laravel-tags": "^4.3"
+        "spatie/laravel-tags": "^4.3",
+        "spatie/laravel-view-models": "^1.5"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.7",
         "barryvdh/laravel-ide-helper": "^2.12",
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "^1.0",

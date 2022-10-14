@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Content;
+namespace App\Services\ContentGenerators;
 
 use App\Models\Bible;
 
