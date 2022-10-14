@@ -3,10 +3,10 @@
 ### TODO
 - [ ] Add a new Comments table and relate it to Post
 - [ ] Implement the comments.
-- [ ] Change the Extra Info to load on-demand.
 - [ ] Wire the `loader` <div> to a livewire component and load the next page of posts.
 - [ ] Add the ability to assign new tags.
-
+- [ ] Move getting the items resolution to a Job to scan the files and save to database (media table as custom properties).
+    
 ### Completed
 - [x] Add a new 'active' field to Items table and default to true.
 - [x] Install and configure [Horizon](https://laravel.com/docs/9.x/horizon).
@@ -63,4 +63,4 @@ update `cnt_quran` set used = 0;
 - [x] <del>Add a Foreign-Id restriction to the og_item_id in the items table.</dev>
 - [x] <del>Add a `duplicates()` relationship top the Item model.<del>
 - [x] <del>Create a job to look for Items without media and try to update them. If it can't disable the Item.</del>
-- [X] <del>Move getting the items resolution to a Job to scan the files and save to database (media table as custom properties).</del>    
+- [x] <del>Change the Extra Info to load on-demand.</del>
