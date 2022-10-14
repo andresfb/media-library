@@ -12,7 +12,7 @@
 - [x] Install and configure [Horizon](https://laravel.com/docs/9.x/horizon).
 - [x] [HEIC to JPG](https://blog.genijaho.dev/how-to-add-support-for-heic-images-with-imagemagick-in-php)
 - [x] Add a `source` field to Posts table to see where did the content comes from
-
+- [x] Dial down the item import to once every 3 hours.
 
 ### Snippets
 1. Get extended Exif data
