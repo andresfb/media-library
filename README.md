@@ -12,7 +12,8 @@ It uses a **Social Media** styled frontend to show the files in random order and
 5. Spatie Tags 4.x
 6. Spatie View Models 1.x
 7. Livewire 2.x
-8. Tailwind CSS 3.x
+8. Bootstrap 5.x
+9. [Minty](https://bootswatch.com/minty/) Bootswatch template
 
 ### Post's Sources
 Free, downloadable versions of the following:
@@ -24,6 +25,3 @@ Free, downloadable versions of the following:
 5. Today in History
 6. Famous Birthdays
 7. Dictionary (American English words)
-
-### Tools
-1. Frontend based on the [Minty](https://bootswatch.com/minty/) Bootswatch templete, but ported to Tailwind.

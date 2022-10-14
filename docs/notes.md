@@ -1,9 +1,11 @@
 # Notes
 
-### To review
-1. [Markdown to HTML](https://laravel-news.com/laravel-markdown-to-html-macro)
-
 ### TODO
+- [ ] Implement the comments.
+- [ ] Change the Extra Info to load on-demand.
+- [ ] Wire the `loader` div a livewire component to load the next page.
+- [ ] Add the ability to assign new tags.
+- [ ] Move getting the items resolution to a Job to scan the files and save to database (media table as custom properties).
 
 ### Completed
 - [x] Add a new 'active' field to Items table and default to true.

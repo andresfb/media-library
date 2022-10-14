@@ -6,8 +6,10 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "ext-gd": "*",
         "ext-dom": "*",
         "ext-exif": "*",
+        "ext-imagick": "*",
         "ext-simplexml": "*",
         "ext-xmlreader": "*",
         "graham-campbell/markdown": "^14.0",
