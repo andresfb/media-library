@@ -4,6 +4,7 @@
 1. [Markdown to HTML](https://laravel-news.com/laravel-markdown-to-html-macro)
 
 ### TODO
+- [ ] Dial down the item import to once every 3 hours.
 
 ### Completed
 - [x] Add a new 'active' field to Items table and default to true.
