@@ -61,7 +61,7 @@
                         </div>
 
                         <div class="d-none my-2 px-2 p-2 border-top small">
-                        @foreach($post['exta_info'] as $key => $info)
+                        @foreach($post['extra_info'] as $key => $info)
                             <div><small><span class="fw-semibold">{{ ucfirst($key) }}:</span> {{ $info }}</small></div>
                         @endforeach
                         </div>
