@@ -5,7 +5,6 @@
 - [ ] Implement the comments.
 - [ ] Wire the `loader` <div> to a livewire component and load the next page of posts.
 - [ ] Add the ability to assign new tags.
-- [ ] Move getting the items resolution to a Job to scan the files and save to database (media table as custom properties).
     
 ### Completed
 - [x] Add a new 'active' field to Items table and default to true.
@@ -13,38 +12,7 @@
 - [x] [HEIC to JPG](https://blog.genijaho.dev/how-to-add-support-for-heic-images-with-imagemagick-in-php)
 - [x] Add a `source` field to Posts table to see where did the content comes from
 - [x] Dial down the item import to once every 3 hours.
-
-### Snippets
-1. Get extended Exif data
-```
-    private function getExif(string $file): array
-    {
-        $fileInfo = new SplFileInfo($file);
-        $baseData = [
-            'full_path' => $fileInfo->getRealPath() ?? $file,
-            'path' => $fileInfo->getPath(),
-            'file_name' => $fileInfo->getFilename(),
-            'extension' => $fileInfo->getExtension(),
-            'size' => $fileInfo->getSize(),
-            'modified_at' => $fileInfo->getMTime(),
-        ];
-
-        try {
-            $data = exif_read_data($file);
-            if (!empty($data)) {
-                return array_merge($baseData, $data);
-            }
-        } catch (Exception) {   }
-
-        try {
-            $prober = FFProbe::create();
-            $data = $prober->format($file)->all();
-            return array_merge($baseData, $data);
-        } catch (Exception) {
-            return $baseData;
-        }
-    }
-```
+- [x] Move getting the items resolution to a Job to scan the files and save to database (media table as custom properties).
 
 ### Queries
 ```

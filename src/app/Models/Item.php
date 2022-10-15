@@ -26,6 +26,7 @@ class Item extends Model implements HasMedia
     /** @var string[] */
     protected $casts = [
         'active' => 'boolean',
+        'has_exif' => 'boolean',
         'og_item_id' => 'integer',
         'exif' => 'json',
     ];

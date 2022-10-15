@@ -52,7 +52,6 @@ class PostListViewModel extends ViewModel
                 $measurement = "MB";
             }
 
-            $info = (array) json_decode($this->getResolution($post->type, $media));
             $avatar = $this->service->getAvatar();
             $extra = [
                 'Original Location' => sprintf("%s%s/", config('raw-files.path'), $post->item->og_path),
@@ -61,6 +60,9 @@ class PostListViewModel extends ViewModel
                 'Imported On' => $post->item->created_at->toDateTimeString()
             ];
 
+            if (!empty($post->item->exif)) {
+                $extra = array_merge($extra, $post->item->exif);
+            }
 
             return [
                 'name' => $avatar['name'],
@@ -73,7 +75,7 @@ class PostListViewModel extends ViewModel
                 'source' => $post->source,
                 'content' => Markdown::convert($post->content)->getContent(),
                 'date' => $post->created_at->longAbsoluteDiffForHumans(),
-                'exta_info' => array_merge($extra, $info),
+                'extra_info' => $extra,
                 'tags' => $post->tags->map(function (Tag $tag) {
                     return [
                         'id' => $tag->id,
@@ -98,68 +100,5 @@ class PostListViewModel extends ViewModel
             now()->addMinutes(45), // TTL
             ['media' => $media->id] // object id
         );
-    }
-
-    /**
-     * getResolution Method.
-     *
-     * @param string $type
-     * @param Media $media
-     * @return string
-     */
-    private function getResolution(string $type, Media $media): string
-    {
-        if ($type == 'image') {
-            return $this->getImageResolution($media);
-        } else {
-            return $this->getVideoResolution($media);
-        }
-    }
-
-    /**
-     * getImageResolution Method.
-     *
-     * @param Media $media
-     * @return string
-     */
-    private function getImageResolution(Media $media): string
-    {
-        $data = [];
-        $resource = null;
-
-        try {
-            $resource = new Imagick($media->getPath());
-            $data = $resource->getImageGeometry();
-            if (!empty($data)) {
-                $data['width'] = $data['width'] . "px";
-                $data['height'] = $data['height'] . "px";
-            }
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-        }
-
-        try {
-            $resl = $resource->getImageResolution();
-            if (empty($resl)) {
-                return json_encode($data);
-            }
-
-            $data["resolution"] = sprintf("%sx%s", ceil($resl['x']), ceil($resl['y']));
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-        }
-
-        return json_encode($data);
-    }
-
-    /**
-     * getVideoResolution Method.
-     *
-     * @param Media $media
-     * @return string
-     */
-    private function getVideoResolution(Media $media): string
-    {
-        return "";
     }
 }
