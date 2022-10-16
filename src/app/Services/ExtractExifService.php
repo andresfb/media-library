@@ -31,7 +31,6 @@ class ExtractExifService
         Log::info("Extracting the Exif of ($howMany) Items.");
         $items = Item::whereHasExif(false)
             ->whereActive(true)
-            ->whereType('video') // TODO: remove
             ->with('media')
             ->limit($howMany)
             ->orderBy('id')
@@ -47,7 +46,7 @@ class ExtractExifService
             $info = $this->getExit($item);
             $this->saveInfo($item, $info);
 
-            $this->checkThumbnail($item->media);
+            $this->checkThumbnail($item);
             if (app()->runningInConsole()) {
                 echo ".";
             }
@@ -241,7 +240,7 @@ class ExtractExifService
      */
     private function checkThumbnail(Item $item): void
     {
-        if ($item->media->collection_name != 'video') {
+        if ($item->type != 'video') {
             return;
         }
 
