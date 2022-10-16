@@ -20,14 +20,6 @@
                                     <span class="text-black-50 time mx-2">{{ $post['date'] }} ago</span>
                                 </div>
                             </div>
-                            <div class="d-flex align-content-end">
-                                <span class="badge
-                                    rounded-pill
-                                    text-bg-light
-                                    fw-light
-                                    text-black-50
-                                    small">{{ ucfirst($post['type']) }}</span>
-                            </div>
                         </div>
 
                         <!-- Media -->
@@ -45,6 +37,15 @@
                         @endif
                         </div>
 
+                        <!-- Tags -->
+                        <div class="my-2 px-2 pb-3">
+                            @foreach($post['tags'] as $tag)
+                                <span class="badge rounded-pill text-bg-light fw-light small @if (!$loop->first) 'ml-2' @endif">
+                                <a href="#" class="tag-link text-decoration-none text-black">{{ $tag['tag'] }}</a>
+                            </span>
+                            @endforeach
+                        </div>
+
                         <!-- Post title -->
                         <div class="my-3 px-2">
                             <span class="fw-semibold">{{ $post['title'] }}</span>
@@ -53,15 +54,6 @@
                         <!-- Post text -->
                         <div class="my-2 px-2 pb-1">
                             <span>{!! $post['content'] !!}</span>
-                        </div>
-
-                        <!-- Tags -->
-                        <div class="my-2 px-2 pb-2 border-bottom">
-                        @foreach($post['tags'] as $tag)
-                            <span class="badge rounded-pill text-bg-light fw-light small @if (!$loop->first) 'ml-2' @endif">
-                                <a href="#" class="tag-link text-decoration-none text-black">{{ $tag['tag'] }}</a>
-                            </span>
-                        @endforeach
                         </div>
 
                         <!-- Buttons -->
