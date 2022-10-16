@@ -4,12 +4,15 @@ namespace App\Services;
 
 use App\Jobs\ConvertHeicToJpgJob;
 use App\Models\Item;
+use App\Traits\MediaAccessible;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use SplFileInfo;
 
 class ImportMediaService
 {
+    use MediaAccessible;
+
     const HEIC_TYPE = 'heic';
 
     /** @var array */
@@ -195,9 +198,12 @@ class ImportMediaService
                     continue;
                 }
 
-                $item->addMedia($file)
+                $media = $item->addMedia($file)
                     ->preservingOriginal()
                     ->toMediaCollection($type);
+
+                $path = $media->getPath();
+                $this->updateAccess($path);
 
                 $this->imported++;
             } catch (Exception $e) {

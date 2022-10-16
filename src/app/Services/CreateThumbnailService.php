@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\Item;
+use App\Models\Media;
+use App\Traits\MediaAccessible;
 use Exception;
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
@@ -11,6 +13,8 @@ use Illuminate\Support\Str;
 
 class CreateThumbnailService
 {
+    use MediaAccessible;
+
     /**
      * execute Method.
      *
@@ -41,8 +45,11 @@ class CreateThumbnailService
             throw new Exception("Couldn't create thumbnail from Item: " . $item->id);
         }
 
-        $item->addMedia($destination)
+        $media = $item->addMedia($destination)
             ->toMediaCollection('thumb');
+
+        $path = $media->getPath();
+        $this->updateAccess($path);
 
         Log::info("Generated the thumbnail for video Item: $itemId");
     }

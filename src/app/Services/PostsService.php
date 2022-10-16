@@ -27,6 +27,7 @@ class PostsService
             ->where('items.active', true)
             ->with('item')
             ->with('item.media')
+            ->with('comments')
             ->inRandomOrder()
             ->limit((int) config('posts.max_daily_posts'));
 

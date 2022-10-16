@@ -71,6 +71,14 @@ class PostListViewModel extends ViewModel
                 $extra = array_merge($extra, $post->item->exif);
             }
 
+            $comments = [];
+            foreach ($post->comments as $comment) {
+                $comments[] = [
+                    'date' => $comment->created_at->longAbsoluteDiffForHumans(),
+                    'comment' => $comment->comment,
+                ];
+            }
+
             return [
                 'name' => $avatar['name'],
                 'avatar' => $avatar['image'],
@@ -86,6 +94,7 @@ class PostListViewModel extends ViewModel
                 'content' => Markdown::convert($post->content)->getContent(),
                 'date' => $post->created_at->longAbsoluteDiffForHumans(),
                 'extra_info' => $extra,
+                'comments' => $comments,
                 'tags' => $post->tags->map(function (Tag $tag) {
                     return [
                         'id' => $tag->id,
