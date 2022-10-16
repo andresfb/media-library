@@ -11,4 +11,7 @@ return [
     'max_daily_posts' => env('MAX_DAILY_POSTS', 500),
 
     'cache_posts' => (bool) env('USE_POSTS_CACHE', false),
+
+    'per_page' => (int) env('POSTS_PER_PAGE', 20),
+
 ];

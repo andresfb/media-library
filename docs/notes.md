@@ -3,8 +3,9 @@
 ### TODO
 - [ ] Add a new Comments table and relate it to Post
 - [ ] Implement the comments.
-- [ ] Wire the `loader` <div> to a livewire component and load the next page of posts.
+- [ ] Wire the `loader <div>` to a livewire component and load the next page of posts.
 - [ ] Add the ability to assign new tags.
+- [ ] Display the `videos` in the content page.
     
 ### Completed
 - [x] Add a new 'active' field to Items table and default to true.

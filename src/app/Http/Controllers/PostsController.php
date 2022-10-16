@@ -7,6 +7,8 @@ use App\ViewModels\PostListViewModel;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class PostsController extends Controller
 {
@@ -15,11 +17,15 @@ class PostsController extends Controller
      *
      * @return Application|Factory|View
      */
-    public function index(PostsService $service)
+    public function index(Request $request, PostsService $service)
     {
+        $values = $request->validate([
+            'type' => ['nullable', 'string', Rule::in(['image', 'video'])]
+        ]);
+
         return view(
             'posts.index',
-            new PostListViewModel($service->getLatest(20))
+            new PostListViewModel($service->getLatest($values))
         );
     }
 }

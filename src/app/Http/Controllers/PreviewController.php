@@ -17,10 +17,6 @@ class PreviewController extends Controller
      */
     public function __invoke(Request $request, Media $media)
     {
-        if (!$request->hasValidSignature()) {
-            abort(401);
-        }
-
         return response()->file(
             $media->getPath(),
             ['Content-type' => $media->mime_type]

@@ -69,6 +69,7 @@ class PostListViewModel extends ViewModel
                 'avatar' => $avatar['image'],
                 'id' => $post->id,
                 'media' => $this->generateLink($media),
+                'mime_type' => $media->mime_type,
                 'type' => $post->type,
                 'slug' => $post->slug,
                 'title' => $post->title,
