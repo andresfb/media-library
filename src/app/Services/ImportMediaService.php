@@ -201,11 +201,10 @@ class ImportMediaService
 
                 $this->imported++;
             } catch (Exception $e) {
-                Item::disable($itemId);
-
                 $message = "$file got error: " . $e->getMessage();
                 Log::error($message);
 
+                Item::disable($itemId);
                 if (app()->runningInConsole()) {
                     echo $message . PHP_EOL;
                 }

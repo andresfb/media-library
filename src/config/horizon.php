@@ -195,7 +195,8 @@ return [
                 'queue' => ['ingestor'],
                 'balance' => 'auto',
                 'processes' => 1,
-                'maxProcesses' => 2,
+                'maxProcesses' => 3,
+                'timeout' => 900,
                 'tries' => 1,
             ],
 

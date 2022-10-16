@@ -105,6 +105,7 @@ class Item extends Model implements HasMedia
         }
 
         try {
+            /** @var Item $item */
             $item = Item::find($itemId);
             if (empty($item)) {
                 return;

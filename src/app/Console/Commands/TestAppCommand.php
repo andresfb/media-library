@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 
 class TestAppCommand extends Command
@@ -23,11 +24,10 @@ class TestAppCommand extends Command
             $this->info("Starting test");
             $this->newLine();
 
-
             $this->newLine();
             $this->info("Done");
             return 0;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->newLine();
             $this->warn("Error found");
             $this->error($e->getMessage());
