@@ -1,11 +1,9 @@
 # Notes
 
 ### TODO
-- [ ] Add a new Comments table and relate it to Post
-- [ ] Implement the comments.
+- [ ] Wire the `comments, info, and settings` buttons in the content page.
 - [ ] Wire the `loader <div>` to a livewire component and load the next page of posts.
 - [ ] Add the ability to assign new tags.
-- [ ] Display the `videos` in the content page.
     
 ### Completed
 - [x] Add a new 'active' field to Items table and default to true.
@@ -14,6 +12,8 @@
 - [x] Add a `source` field to Posts table to see where did the content comes from
 - [x] Dial down the item import to once every 3 hours.
 - [x] Move getting the items resolution to a Job to scan the files and save to database (media table as custom properties).
+- [x] Display the `videos` in the content page.
+- [x] Add a new Comments table and relate it to Post.
 
 ### Queries
 ```

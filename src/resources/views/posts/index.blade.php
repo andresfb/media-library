@@ -11,26 +11,26 @@
 
                     <div class="bg-white border mt-2">
 
-                        <div>
-                            <div class="d-flex flex-row justify-content-between align-items-center p-2 border-bottom">
-                                <div class="d-flex flex-row align-items-center feed-text px-1">
-                                    <img class="rounded-circle" src="{{ $post['avatar'] }}" width="45" alt="avatar">
-                                    <div class="d-flex flex-column flex-wrap">
-                                        <span class="fw-semibold mx-2">{{ $post['name'] }}</span>
-                                        <span class="text-black-50 time mx-2">{{ $post['date'] }} ago</span>
-                                    </div>
+                        <!-- Poster -->
+                        <div class="d-flex flex-row justify-content-between align-items-center p-2 border-bottom">
+                            <div class="d-flex flex-row align-items-center feed-text px-1">
+                                <img class="rounded-circle" src="{{ $post['avatar'] }}" width="45" alt="avatar">
+                                <div class="d-flex flex-column flex-wrap">
+                                    <span class="fw-semibold mx-2">{{ $post['name'] }}</span>
+                                    <span class="text-black-50 time mx-2">{{ $post['date'] }} ago</span>
                                 </div>
-                                <div class="d-flex align-content-end">
-                                    <span class="badge
-                                        rounded-pill
-                                        text-bg-light
-                                        fw-light
-                                        text-black-50
-                                        small">{{ ucfirst($post['type']) }}</span>
-                                </div>
+                            </div>
+                            <div class="d-flex align-content-end">
+                                <span class="badge
+                                    rounded-pill
+                                    text-bg-light
+                                    fw-light
+                                    text-black-50
+                                    small">{{ ucfirst($post['type']) }}</span>
                             </div>
                         </div>
 
+                        <!-- Media -->
                         <div class="feed-image my-2 px-2 pb-2 border-bottom">
                         @if ($post['type'] == 'video')
                             <div class="ratio ratio-{{ $post['aspect'] }}">
@@ -45,14 +45,17 @@
                         @endif
                         </div>
 
+                        <!-- Post title -->
                         <div class="my-3 px-2">
                             <span class="fw-semibold">{{ $post['title'] }}</span>
                         </div>
 
+                        <!-- Post text -->
                         <div class="my-2 px-2 pb-1">
                             <span>{!! $post['content'] !!}</span>
                         </div>
 
+                        <!-- Tags -->
                         <div class="my-2 px-2 pb-2 border-bottom">
                         @foreach($post['tags'] as $tag)
                             <span class="badge rounded-pill text-bg-light fw-light small @if (!$loop->first) 'ml-2' @endif">
@@ -61,26 +64,43 @@
                         @endforeach
                         </div>
 
+                        <!-- Buttons -->
                         <div class="d-flex justify-content-end socials p-1 py-2">
-                            <i class="fa fa-comments"></i>
-                            <i class="fas fa-info-circle"></i>
+                            <i class="fa fa-comments @if(!empty($post['comments'])) text-black-50 @endif"></i>
+                            <i class="fas fa-info-circle @if(!empty($post['extra_info'])) text-black-50 @endif"></i>
                             <i class="fa fa-cogs"></i>
                         </div>
 
+                        <!-- Actions -->
                         <div class="d-none my-2 px-2 pt-2 pb-3 border-top">
                             <div class="d-flex justify-content-end">
                                 <button type="button" class="btn btn-secondary btn-sm mt-3">Disable Item</button>
                             </div>
                         </div>
 
+                        <!-- Comments -->
                         <div class="d-none my-2 px-2 pt-2 pb-3 border-top">
-                            <label class="small mb-1" for="comment-post-{{ $post['id'] }}">Comment</label>
+                        @if(!empty($post['comments']))
+                            <ul class="list-group mb-4">
+                            @foreach($post['comments'] as $comment)
+                                <li class="list-group-item pt-3">
+                                    <div class="text-black-50 small"><small>{{ $comment['date'] }}</small></div>
+                                    <div class="mt-3">
+                                        <p class="text-black-50">{{ $comment['comment'] }}</p>
+                                    </div>
+                                </li>
+                            @endforeach
+                            </ul>
+                        @endif
+
+                            <label class="small mb-1" for="comment-post-{{ $post['id'] }}">Enter Comment</label>
                             <textarea class="form-control" name="comment" id="comment-post-{{ $post['id'] }}" cols="30" rows="5"></textarea>
                             <div class="d-flex justify-content-end">
                                 <button type="button" class="btn btn-primary btn-sm mt-3">Save</button>
                             </div>
                         </div>
 
+                        <!-- Extra Info -->
                         <div class="d-none my-2 px-2 p-2 border-top small">
                         @foreach($post['extra_info'] as $key => $info)
                             @if(is_array($info))
