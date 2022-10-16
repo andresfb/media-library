@@ -40,9 +40,16 @@ class PostListViewModel extends ViewModel
                 return [];
             }
 
-            $media = $post->item->media->where('collection_name', $post->type)->first();
+            /** @var Media $media */
+            $media = $post->item->getMedia($post->type)->first();
             if (empty($media)) {
                 return [];
+            }
+
+            $poster = "";
+            $thumb = $post->item->getMedia('thumb')->first();
+            if (!empty($thumb)) {
+                $poster = $thumb->getUrl();
             }
 
             $measurement = "KB";
@@ -68,8 +75,10 @@ class PostListViewModel extends ViewModel
                 'name' => $avatar['name'],
                 'avatar' => $avatar['image'],
                 'id' => $post->id,
-                'media' => $this->generateLink($media),
+                'media' => $media->getUrl(),
+                'poster' => $poster,
                 'mime_type' => $media->mime_type,
+                'aspect' => $extra['aspect'] ?? '1x1',
                 'type' => $post->type,
                 'slug' => $post->slug,
                 'title' => $post->title,
@@ -86,20 +95,5 @@ class PostListViewModel extends ViewModel
                 }),
             ];
         })->collect();
-    }
-
-    /**
-     * generateLink Method.
-     *
-     * @param Media $media
-     * @return string
-     */
-    private function generateLink(Media $media): string
-    {
-        return URL::temporarySignedRoute(
-            'preview', // route name
-            now()->addMinutes(45), // TTL
-            ['media' => $media->id] // object id
-        );
     }
 }

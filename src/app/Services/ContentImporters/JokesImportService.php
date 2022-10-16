@@ -40,7 +40,7 @@ class JokesImportService implements ImportServiceInterface
             }
         }
 
-        $this->setMessages("Finished importimg jokes");
+        $this->setMessages("Finished importing jokes");
     }
 
     /**

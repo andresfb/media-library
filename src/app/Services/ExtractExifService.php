@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Jobs\CreateThumbnailJob;
 use App\Models\Item;
 use Exception;
 use FFMpeg\FFProbe;
@@ -30,6 +31,7 @@ class ExtractExifService
         Log::info("Extracting the Exif of ($howMany) Items.");
         $items = Item::whereHasExif(false)
             ->whereActive(true)
+            ->whereType('video') // TODO: remove
             ->with('media')
             ->limit($howMany)
             ->orderBy('id')
@@ -44,6 +46,8 @@ class ExtractExifService
         $items->map(function (Item $item) {
             $info = $this->getExit($item);
             $this->saveInfo($item, $info);
+
+            $this->checkThumbnail($item->media);
             if (app()->runningInConsole()) {
                 echo ".";
             }
@@ -66,7 +70,7 @@ class ExtractExifService
     private function getExit(Item $item): array
     {
         $file = !empty($item->media) && !$item->media->isEmpty()
-            ? $item->media->first()->getPath()
+            ? $item->getMedia($item->type)->first()->getPath()
             : sprintf("%s%s/%s", config('raw-files.path'), $item->og_path, $item->og_file);
 
         if (!file_exists($file)) {
@@ -123,8 +127,17 @@ class ExtractExifService
     {
         $data = [];
         try {
-            $prober = FFProbe::create();
-            return $prober->format($file)->all();
+            $probe = FFProbe::create();
+            $data = $probe->format($file)->all();
+
+            $streams = $probe->streams($file);
+            $video = $streams->videos()->first();
+
+            $data['width'] = (int) $video->get('width', 800);
+            $data['height'] = (int) $video->get('height', 450);
+            $data['aspect'] = $this->calcAspect($data);
+
+            return $data;
         } catch (Exception $e) {
             Log::error($e->getMessage());
             return $data;
@@ -185,5 +198,59 @@ class ExtractExifService
         } catch (Exception $e) {
             Log::error("Can't save exif for item id: $item->id " . $e->getMessage());
         }
+    }
+
+    /**
+     * calcAspect Method.
+     *
+     * @param array $data
+     * @return string
+     */
+    private function calcAspect(array $data): string
+    {
+        if ($data['height'] == 0 || $data['width'] == 0) {
+            dump("no height", $data);
+            return "1x1";
+        }
+
+        $ratio = $data['height'] / $data['width'];
+        if ($ratio >= 0.95) {
+            return "1x1";
+        }
+
+        if ($ratio <= 0.45) {
+            return "21x9";
+        }
+
+        if ($ratio <= 0.65) {
+            return "16x9";
+        }
+
+        if ($ratio <= 0.85) {
+            return "4x3";
+        }
+
+        return "1x1";
+    }
+
+    /**
+     * checkThumbnail Method.
+     *
+     * @param Item $item
+     * @return void
+     */
+    private function checkThumbnail(Item $item): void
+    {
+        if ($item->media->collection_name != 'video') {
+            return;
+        }
+
+        if ($item->hasMedia('thumb')) {
+            return;
+        }
+
+        CreateThumbnailJob::dispatch($item->id)
+            ->onQueue('media')
+            ->delay(now()->addSeconds(15));
     }
 }

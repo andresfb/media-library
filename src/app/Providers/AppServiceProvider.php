@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Services\AvatarGeneratorService;
 use App\Services\ConvertHeicToJpgService;
+use App\Services\CreateThumbnailService;
 use App\Services\ExtractExifService;
 use App\Services\ImportMediaService;
 use Illuminate\Support\ServiceProvider;
@@ -31,6 +32,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(ExtractExifService::class, function () {
             return new ExtractExifService();
+        });
+
+        $this->app->bind(CreateThumbnailService::class, function () {
+            return new CreateThumbnailService();
         });
     }
 

@@ -66,6 +66,12 @@ class Item extends Model implements HasMedia
             ->singleFile()
             ->useDisk('media');
 
+        $this->addMediaCollection('thumb')
+            ->acceptsMimeTypes([
+                'image/jpeg',
+            ])->singleFile()
+            ->useDisk('media');
+
         $this->addMediaCollection('image')
             ->singleFile()
             ->useDisk('media');

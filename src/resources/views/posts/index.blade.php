@@ -33,8 +33,9 @@
 
                         <div class="feed-image my-2 px-2 pb-2 border-bottom">
                         @if ($post['type'] == 'video')
-                            <div class="ratio ratio-16x9">
-                                <video loop controls>
+                            <div class="ratio ratio-{{ $post['aspect'] }}">
+                                <video @if(!empty($post['poster'])) poster="{{ $post['poster'] }}" @endif
+                                       loop controls>
                                     <source src="{{ $post['media'] }}" type="{{ $post['mime_type'] }}">
                                     Video is not supported
                                 </video>
