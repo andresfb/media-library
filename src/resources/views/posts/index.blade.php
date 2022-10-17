@@ -9,7 +9,12 @@
 
                 @forelse($posts as $post)
 
-                    <div class="bg-white border mt-2">
+                    <div class="bg-white border mt-2 mb-3" x-data="{
+                        comments: false,
+                        info: false,
+                        actions: false,
+                        editTags: false
+                    }">
 
                         <!-- Poster -->
                         <div class="d-flex flex-row justify-content-between align-items-center p-2 border-bottom">
@@ -39,11 +44,21 @@
 
                         <!-- Tags -->
                         <div class="my-2 px-2 pb-3">
+
+                            <div x-show="editTags" class="mt-3 col-lg-6">
+                                <input type="text" @keydown.enter="editTags=false;$el.value=''" class="form-control form-control-sm" placeholder="search tags...">
+                            </div>
+
+                            <div class="mt-3">
                             @foreach($post['tags'] as $tag)
-                                <span class="badge rounded-pill text-bg-light fw-light small @if (!$loop->first) 'ml-2' @endif">
-                                <a href="#" class="tag-link text-decoration-none text-black">{{ $tag['tag'] }}</a>
-                            </span>
+                                <span class="badge rounded-pill text-bg-info fw-semibold @if (!$loop->first) 'ml-2' @endif">
+                                    <a href="#" class="tag-link text-decoration-none text-white">{{ $tag['tag'] }}</a>
+                                </span>
                             @endforeach
+                                <span x-show="!editTags" class="badge rounded-pill text-bg-secondary fw-semibold 'ml-5'">
+                                    <a href="#" @click.prevent="editTags=true" class="tag-link text-decoration-none text-white">Add Tags</a>
+                                </span>
+                            </div>
                         </div>
 
                         <!-- Post title -->
@@ -58,20 +73,13 @@
 
                         <!-- Buttons -->
                         <div class="d-flex justify-content-end socials p-1 py-2">
-                            <i class="fa fa-comments @if(!empty($post['comments'])) text-black-50 @endif"></i>
-                            <i class="fas fa-info-circle @if(!empty($post['extra_info'])) text-black-50 @endif"></i>
-                            <i class="fa fa-cogs"></i>
-                        </div>
-
-                        <!-- Actions -->
-                        <div class="d-none my-2 px-2 pt-2 pb-3 border-top">
-                            <div class="d-flex justify-content-end">
-                                <button type="button" class="btn btn-secondary btn-sm mt-3">Disable Item</button>
-                            </div>
+                            <i @click="comments=!comments" class="fa fa-comments @if(!empty($post['comments'])) text-black-50 @endif"></i>
+                            <i @click="info=!info" class="fas fa-info-circle @if(!empty($post['extra_info'])) text-black-50 @endif"></i>
+                            <i @click="actions=!actions" class="fa fa-cogs"></i>
                         </div>
 
                         <!-- Comments -->
-                        <div class="d-none my-2 px-2 pt-2 pb-3 border-top">
+                        <div x-show="comments" class="my-2 px-2 pt-2 pb-3 border-top">
                         @if(!empty($post['comments']))
                             <ul class="list-group mb-4">
                             @foreach($post['comments'] as $comment)
@@ -85,7 +93,7 @@
                             </ul>
                         @endif
 
-                            <label class="small mb-1" for="comment-post-{{ $post['id'] }}">Enter Comment</label>
+                            <label class="small mb-2" for="comment-post-{{ $post['id'] }}">Enter Comment</label>
                             <textarea class="form-control" name="comment" id="comment-post-{{ $post['id'] }}" cols="30" rows="5"></textarea>
                             <div class="d-flex justify-content-end">
                                 <button type="button" class="btn btn-primary btn-sm mt-3">Save</button>
@@ -93,7 +101,7 @@
                         </div>
 
                         <!-- Extra Info -->
-                        <div class="d-none my-2 px-2 p-2 border-top small">
+                        <div x-show="info" class="my-2 px-2 p-2 border-top small">
                         @foreach($post['extra_info'] as $key => $info)
                             @if(is_array($info))
                                 @foreach($info as $ikey => $data)
@@ -103,6 +111,13 @@
                             <div><small><span class="fw-semibold">{{ ucfirst($key) }}:</span> {{ $info }}</small></div>
                             @endif
                         @endforeach
+                        </div>
+
+                        <!-- Actions -->
+                        <div x-show="actions" class="my-2 px-2 pt-2 pb-3 border-top">
+                            <div class="d-flex justify-content-end">
+                                <button type="button" class="btn btn-secondary btn-sm mt-3">Disable Item</button>
+                            </div>
                         </div>
                     </div>
 
