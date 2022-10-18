@@ -80,9 +80,9 @@ class PostListViewModel extends ViewModel
             }
 
             return [
+                'id' => $post->id,
                 'name' => $avatar['name'],
                 'avatar' => $avatar['image'],
-                'id' => $post->id,
                 'media' => $media->getUrl(),
                 'poster' => $poster,
                 'mime_type' => $media->mime_type,
@@ -95,13 +95,7 @@ class PostListViewModel extends ViewModel
                 'date' => $post->created_at->longAbsoluteDiffForHumans(),
                 'extra_info' => $extra,
                 'comments' => $comments,
-                'tags' => $post->tags->map(function (Tag $tag) {
-                    return [
-                        'id' => $tag->id,
-                        'tag' => $tag->name,
-                        'slug' => $tag->slug
-                    ];
-                }),
+                'tags' => $post->tags->pluck('name')->sort(),
             ];
         })->collect();
     }

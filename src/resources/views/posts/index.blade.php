@@ -12,8 +12,7 @@
                     <div class="bg-white border mt-2 mb-3" x-data="{
                         comments: false,
                         info: false,
-                        actions: false,
-                        editTags: false
+                        actions: false
                     }">
 
                         <!-- Poster -->
@@ -43,23 +42,10 @@
                         </div>
 
                         <!-- Tags -->
-                        <div class="my-2 px-2 pb-3">
-
-                            <div x-show="editTags" class="mt-3 col-lg-6">
-                                <input type="text" @keydown.enter="editTags=false;$el.value=''" class="form-control form-control-sm" placeholder="search tags...">
-                            </div>
-
-                            <div class="mt-3">
-                            @foreach($post['tags'] as $tag)
-                                <span class="badge rounded-pill text-bg-info fw-semibold @if (!$loop->first) 'ml-2' @endif">
-                                    <a href="#" class="tag-link text-decoration-none text-white">{{ $tag['tag'] }}</a>
-                                </span>
-                            @endforeach
-                                <span x-show="!editTags" class="badge rounded-pill text-bg-secondary fw-semibold 'ml-5'">
-                                    <a href="#" @click.prevent="editTags=true" class="tag-link text-decoration-none text-white">Add Tags</a>
-                                </span>
-                            </div>
-                        </div>
+                        <livewire:post-tags
+                            :tags="$post['tags']"
+                            :postId="$post['id']"
+                            wire:key="post-{{ $post['id'] }}" />
 
                         <!-- Post title -->
                         <div class="my-3 px-2">

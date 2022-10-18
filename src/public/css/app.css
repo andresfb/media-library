@@ -21,3 +21,9 @@ body {
 .tag-link a {
     font-weight: 300 !important;
 }
+
+.no-shadow {
+    outline:0 !important;
+    -webkit-appearance:none;
+    box-shadow: none !important;
+}

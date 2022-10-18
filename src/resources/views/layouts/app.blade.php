@@ -16,14 +16,13 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" />
     <link rel="stylesheet" href="/css/app.css">
-
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <livewire:styles />
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">ML</a>
+            <a class="navbar-brand" href="{{ route('home') }}">ML</a>
             <button
                 aria-controls="navbarColor01"
                 aria-expanded="false"
@@ -56,5 +55,7 @@
 
     @yield('content')
 
+    <livewire:scripts />
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </body>
 </html>
