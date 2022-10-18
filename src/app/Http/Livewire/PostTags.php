@@ -24,6 +24,8 @@ class PostTags extends Component
 
     public bool $editTags = false;
 
+    public int $selectedIndex = -1;
+
     protected array $rules = [
         'search' => 'required|string|min:2'
     ];
@@ -78,6 +80,10 @@ class PostTags extends Component
      */
     public function addTag(string $value = ""): void
     {
+        if ($this->selectedIndex != -1) {
+            $value = $this->tagList[$this->selectedIndex];
+        }
+
         if (empty(trim($value))) {
             $this->validate();
             $value = $this->search;
@@ -102,8 +108,7 @@ class PostTags extends Component
         $post->save();
 
         $this->loadTags($post);
-        $this->search = "";
-        $this->resetTagList();
+        $this->reset();
     }
 
     /**
@@ -136,8 +141,37 @@ class PostTags extends Component
         $post->detachTag($tag);
 
         $this->loadTags($post);
-        $this->search = "";
-        $this->resetTagList();
+        $this->reset();
+    }
+
+    /**
+     * increment Method.
+     *
+     * @return void
+     */
+    public function increment(): void
+    {
+        if ($this->selectedIndex == $this->tagList->count() - 1) {
+            $this->selectedIndex = 0;
+            return;
+        }
+
+        $this->selectedIndex++;
+    }
+
+    /**
+     * decrement Method.
+     *
+     * @return void
+     */
+    public function decrement(): void
+    {
+        if ($this->selectedIndex == 0) {
+            $this->selectedIndex = $this->tagList->count() - 1;
+            return;
+        }
+
+        $this->selectedIndex--;
     }
 
     /**
@@ -147,9 +181,21 @@ class PostTags extends Component
      */
     public function cancel(): void
     {
-        $this->search = "";
-        $this->resetTagList();
+        $this->reset();
         $this->editTags = false;
+    }
+
+    /**
+     * reset Method.
+     *
+     * @param ...$properties
+     * @return void
+     */
+    public function reset(...$properties): void
+    {
+        $this->search = "";
+        $this->selectedIndex = -1;
+        $this->resetTagList();
     }
 
     /**
