@@ -42,10 +42,10 @@
                         </div>
 
                         <!-- Tags -->
-                        <livewire:post-tags
+                        <livewire:post-tags-component
                             :tags="$post['tags']"
                             :postId="$post['id']"
-                            wire:key="post-{{ $post['id'] }}" />
+                            wire:key="post-tags-{{ $post['id'] }}" />
 
                         <!-- Post title -->
                         <div class="my-3 px-2">
@@ -59,32 +59,16 @@
 
                         <!-- Buttons -->
                         <div class="d-flex justify-content-end socials p-1 py-2">
-                            <i @click="comments=!comments" class="fa fa-comments @if(!empty($post['comments'])) text-black-50 @endif"></i>
+                            <i @click="comments=!comments" class="fa fa-comments @if($post['comments']->isNotEmpty()) text-black-50 @endif"></i>
                             <i @click="info=!info" class="fas fa-info-circle @if(!empty($post['extra_info'])) text-black-50 @endif"></i>
                             <i @click="actions=!actions" class="fa fa-cogs"></i>
                         </div>
 
                         <!-- Comments -->
-                        <div x-show="comments" class="my-2 px-2 pt-2 pb-3 border-top">
-                        @if(!empty($post['comments']))
-                            <ul class="list-group mb-4">
-                            @foreach($post['comments'] as $comment)
-                                <li class="list-group-item pt-3">
-                                    <div class="text-black-50 small"><small>{{ $comment['date'] }}</small></div>
-                                    <div class="mt-3">
-                                        <p class="text-black-50">{{ $comment['comment'] }}</p>
-                                    </div>
-                                </li>
-                            @endforeach
-                            </ul>
-                        @endif
-
-                            <label class="small mb-2" for="comment-post-{{ $post['id'] }}">Enter Comment</label>
-                            <textarea class="form-control" name="comment" id="comment-post-{{ $post['id'] }}" cols="30" rows="5"></textarea>
-                            <div class="d-flex justify-content-end">
-                                <button type="button" class="btn btn-primary btn-sm mt-3">Save</button>
-                            </div>
-                        </div>
+                        <livewire:post-comments-component
+                            :comments="$post['comments']"
+                            :postId="$post['id']"
+                            wire:key="post-comments-{{ $post['id'] }}" />
 
                         <!-- Extra Info -->
                         <div x-show="info" class="my-2 px-2 p-2 border-top small">
@@ -100,11 +84,10 @@
                         </div>
 
                         <!-- Actions -->
-                        <div x-show="actions" class="my-2 px-2 pt-2 pb-3 border-top">
-                            <div class="d-flex justify-content-end">
-                                <button type="button" class="btn btn-secondary btn-sm mt-3">Disable Item</button>
-                            </div>
-                        </div>
+                        <livewire:post-actions-component
+                            :postId="$post['id']"
+                            wire:key="post-actions-{{ $post['id'] }}" />
+
                     </div>
 
                     @if ($loop->remaining == 3)

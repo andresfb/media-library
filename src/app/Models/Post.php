@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\ConvertDateTimeToTimezone;
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,7 +12,8 @@ use Spatie\Tags\HasTags;
 
 class Post extends Model
 {
-    use SoftDeletes, HasTags, ConvertDateTimeToTimezone;
+    use SoftDeletes, ConvertDateTimeToTimezone;
+    use CascadeSoftDeletes, HasTags;
 
     /** @var array */
     protected $guarded = [];
@@ -29,6 +31,9 @@ class Post extends Model
         'item_id' => 'integer',
         'status' => 'integer',
     ];
+
+    /** @var array */
+    protected array $cascadeDeletes = ['item'];
 
 
     /**

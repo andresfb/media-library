@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 use Livewire\Component;
 use Spatie\Tags\Tag;
 
-class PostTags extends Component
+class PostTagsComponent extends Component
 {
     public int $postId = 0;
 
@@ -104,7 +104,7 @@ class PostTags extends Component
         }
 
         $post->attachTag($tag);
-        $post->status = true;
+        $post->status = 1;
         $post->save();
 
         $this->loadTags($post);

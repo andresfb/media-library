@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\ConvertDateTimeToTimezone;
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,7 +18,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  */
 class Item extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia;
+    use HasFactory, InteractsWithMedia, CascadeSoftDeletes;
     use SoftDeletes, ConvertDateTimeToTimezone;
 
     /** @var array */
@@ -38,6 +39,8 @@ class Item extends Model implements HasMedia
         'updated_at',
     ];
 
+    /** @var array */
+    protected array $cascadeDeletes = ['media'];
 
     /**
      * exists Method.

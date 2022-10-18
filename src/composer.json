@@ -12,6 +12,7 @@
         "ext-imagick": "*",
         "ext-simplexml": "*",
         "ext-xmlreader": "*",
+        "dyrynda/laravel-cascade-soft-deletes": "^4.2",
         "fakerphp/faker": "^1.9.1",
         "graham-campbell/markdown": "^14.0",
         "guzzlehttp/guzzle": "^7.2",

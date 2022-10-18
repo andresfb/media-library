@@ -94,7 +94,7 @@ class PostListViewModel extends ViewModel
                 'content' => Markdown::convert($post->content)->getContent(),
                 'date' => $post->created_at->longAbsoluteDiffForHumans(),
                 'extra_info' => $extra,
-                'comments' => $comments,
+                'comments' => collect($comments),
                 'tags' => $post->tags->pluck('name')->sort(),
             ];
         })->collect();

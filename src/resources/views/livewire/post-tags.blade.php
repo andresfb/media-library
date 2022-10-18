@@ -1,7 +1,10 @@
+<?php use App\Http\Livewire\PostTagsComponent; ?>
+
 <div class="position-relative my-2 px-2 pb-3">
 
     @if (session()->has('error'))
-        <div class="alert alert-danger">
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             {{ session('error') }}
         </div>
     @endif
@@ -16,7 +19,8 @@
             wire:keydown.enter="addTag"
             wire:keydown.arrow-up="decrement"
             wire:keydown.arrow-down="increment"
-        wire:model="search">
+            wire:model.debounce.500ms="search">
+
         <div wire:ignore x-init="() => $refs.searchInput.focus()"></div>
 
     @if (!empty($tagList))
