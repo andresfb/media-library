@@ -5,13 +5,8 @@ namespace App\ViewModels;
 use App\Models\Media;
 use App\Models\Post;
 use App\Services\AvatarGeneratorService;
-use Exception;
 use GrahamCampbell\Markdown\Facades\Markdown;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\URL;
-use Imagick;
-use Spatie\Tags\Tag;
 use Spatie\ViewModels\ViewModel;
 use Illuminate\Support\Collection as SimpleCollection;
 
@@ -21,10 +16,16 @@ class PostListViewModel extends ViewModel
 
     private AvatarGeneratorService $service;
 
-    public function __construct(LengthAwarePaginator $postList)
+    private SimpleCollection $posts;
+
+    public int $postCount = 0;
+
+    public function __construct(LengthAwarePaginator $postList, int $postCount)
     {
         $this->postList = $postList;
         $this->service = resolve(AvatarGeneratorService::class);
+        $this->posts = collect([]);
+        $this->postCount = $postCount;
     }
 
     /**
@@ -34,7 +35,11 @@ class PostListViewModel extends ViewModel
      */
     public function posts(): SimpleCollection
     {
-        return $this->postList->map(function (Post $post) {
+        if ($this->posts->isNotEmpty()) {
+            return $this->posts;
+        }
+
+        $this->posts = $this->postList->map(function (Post $post) {
 
             if (empty($post->item->media)) {
                 return [];
@@ -95,8 +100,10 @@ class PostListViewModel extends ViewModel
                 'date' => $post->created_at->longAbsoluteDiffForHumans(),
                 'extra_info' => $extra,
                 'comments' => collect($comments),
-                'tags' => $post->tags->pluck('name')->sort(),
+                'tags' => $post->tags()->pluck('name')->sort(),
             ];
         })->collect();
+
+        return $this->posts;
     }
 }

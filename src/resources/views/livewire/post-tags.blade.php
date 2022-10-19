@@ -46,7 +46,7 @@
                 <span class="badge rounded-pill text-bg-secondary fw-semibold">
                     <a href="#"
                        wire:click.prevent="deleteTag('{{ $tag }}')"
-                       class="tag-link text-decoration-none text-white mr-2">
+                       class="tag-link text-decoration-none text-white p-1 me-1">
                         {{ $tag }}
                         <i class="fas fa-ban"></i>
                     </a>
@@ -55,7 +55,7 @@
             <span class="badge rounded-pill text-bg-warning fw-semibold">
                 <a href="#"
                    wire:click.prevent="cancel"
-                   class="tag-link text-decoration-none text-white mr-2">Cancel</a>
+                   class="tag-link text-decoration-none text-white p-2 me-1">Cancel</a>
             </span>
         </div>
     </div>
@@ -64,14 +64,14 @@
 @if (!$editTags)
     <div class="mt-3">
         @foreach($tags as $tag)
-            <span class="badge rounded-pill text-bg-info fw-semibold mr-2">
-                <a href="#" class="tag-link text-decoration-none text-white">{{ $tag }}</a>
+            <span class="h6 me-1">
+                <a href="{{ route('tagged',['tags' => $tag]) }}" class="tag-link">{{ $tag }}</a>
             </span>
         @endforeach
-        <span class="badge rounded-pill text-bg-success fw-semibold">
+        <span class="badge rounded-pill text-bg-success fw-semibold ms-2">
             <a href="#"
                wire:click.prevent="$toggle('editTags')"
-               class="tag-link text-decoration-none text-white">Edit</a>
+               class="tag-link text-decoration-none text-white p-2">Edit</a>
         </span>
     </div>
 @endif

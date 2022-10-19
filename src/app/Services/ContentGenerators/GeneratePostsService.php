@@ -77,7 +77,7 @@ class GeneratePostsService
                 ]);
 
                 $post->attachTag($this->service->getTag());
-                $post->attachTag(ucfirst($item->type));
+                $post->attachTag($item->type);
 
                 $this->service->markUsed();
                 $this->generated++;

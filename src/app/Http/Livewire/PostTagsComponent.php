@@ -6,7 +6,6 @@ use App\Models\Post;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -59,7 +58,8 @@ class PostTagsComponent extends Component
             ->containing($value)
             ->limit(10)
             ->get()
-            ->pluck('name');
+            ->pluck('name')
+            ->sort();
     }
 
     /**
@@ -92,7 +92,6 @@ class PostTagsComponent extends Component
         $tag = Str::of($value)
             ->trim()
             ->lower()
-            ->headline()
             ->replace([",", "'", '"', "|", "*", "!", "`"], "")
             ->stripTags()
             ->toString();
@@ -133,7 +132,6 @@ class PostTagsComponent extends Component
         $tag = Str::of($value)
             ->trim()
             ->lower()
-            ->headline()
             ->replace([",", "'", '"', "|", "*", "!", "`"], "")
             ->stripTags()
             ->toString();

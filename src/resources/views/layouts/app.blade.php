@@ -40,10 +40,9 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Tags</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Galleries</a>
+                        <a class="nav-link {{ Route::is('tagged') ? 'active' : '' }} " href="{{ route('tagged') }}">
+                            Tags
+                        </a>
                     </li>
                 </ul>
                 <form class="d-flex">

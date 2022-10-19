@@ -3,31 +3,32 @@
 namespace App\Http\Controllers;
 
 use App\Services\PostsService;
-use App\ViewModels\PostListViewModel;
+use App\ViewModels\TaggedPostListViewModel;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
-class PostsController extends Controller
+class TaggedPostsController extends Controller
 {
     /**
-     * index Method.
+     * Display a listing of the resource.
      *
      * @return Application|Factory|View
      */
     public function index(Request $request, PostsService $service)
     {
         $values = $request->validate([
+            'tags' => ['nullable', 'string'],
             'type' => ['nullable', 'string', Rule::in(['image', 'video'])]
         ]);
 
-        [$posts, $count] = $service->getLatest($values);
+        [$posts, $tags, $count] = $service->getTagged($values);
 
         return view(
-            'posts.index',
-            new PostListViewModel($posts, $count)
+            'tagged.index',
+            new TaggedPostListViewModel($posts, $tags, $count)
         );
     }
 }
