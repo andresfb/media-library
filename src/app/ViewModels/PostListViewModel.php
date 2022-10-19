@@ -104,7 +104,7 @@ class PostListViewModel extends ViewModel
                 'date' => $post->created_at->longAbsoluteDiffForHumans(),
                 'extra_info' => $extra,
                 'comments' => collect($comments),
-                'tags' => $post->tags()->pluck('name')->sort(),
+                'tags' => $post->tags->pluck('name')->sort(),
             ];
         })->collect();
 

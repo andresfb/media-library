@@ -1,9 +1,12 @@
 # Notes
 
 ### TODO
-- [ ] Wire the `loader <div>` to a livewire component and load the next page of posts.
-- [ ] Create the Tags page.
-
+- [ ] Add an `Edit` page to edit a single Post.
+- [ ] Link to edit page from the Tagged Post page.
+- [ ] Add a link to full image in the Tagged Posts page.
+- [ ] Create a new `feeds` table to hold the list of Posts Ids and use those to load the actual Post in the PostService. The service should now load them in order of creation.
+- [ ] Create a job that add records to the `feeds` table from random Posts at a rate of 500 per day.
+ 
 ### Completed
 - [x] Add a new 'active' field to Items table and default to true.
 - [x] Install and configure [Horizon](https://laravel.com/docs/9.x/horizon).
@@ -15,6 +18,8 @@
 - [x] Add a new Comments table and relate it to Post.
 - [x] Add the ability to assign new tags.
 - [x] Wire the `comments, info, and settings` buttons in the content page.
+- [X] Create the Tags page.
+- [x] Wire the `loader <div>` to a livewire component and load the next page of posts (added a refresh button instead).
 
 ### Not Implemented
 - [x] <del>Create a job to scan all the imported files and add the exif data to the items table (EXIF for images, FFPROB for videos).</del>

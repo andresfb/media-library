@@ -3,14 +3,15 @@
 namespace App\Services;
 
 use App\Models\Post;
+use App\Traits\TagsCacheable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Spatie\Tags\Tag;
 
 class PostsService
 {
-    private Collection $tags;
+    use TagsCacheable;
 
+    private Collection $tags;
 
     public function __construct()
     {
@@ -73,6 +74,7 @@ class PostsService
         $query = Post::with('item')
             ->with('item.media')
             ->with('tags')
+            ->with('comments')
             ->withAllTags($tags);
 
         if (!empty($values['type'])) {
@@ -125,12 +127,7 @@ class PostsService
             return $this->tags;
         }
 
-        $this->tags = Tag::select('name')
-            ->cache(3600)
-            ->get()
-            ->pluck('name')
-            ->sort();
-
+        $this->tags = $this->getAllTags();
         return $this->tags;
     }
 }

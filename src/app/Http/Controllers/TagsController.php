@@ -2,21 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Spatie\Tags\Tag;
+use App\Traits\TagsCacheable;
 
 class TagsController extends Controller
 {
+    use TagsCacheable;
+
     public function __invoke()
     {
         return view(
             'tags.index',
-            [
-                'tags' => Tag::select('name')
-                    ->cache(600)
-                    ->get()
-                    ->pluck('name')
-                    ->sort()
-            ]
+            ['tags' => $this->getAllTags()]
         );
     }
 }
