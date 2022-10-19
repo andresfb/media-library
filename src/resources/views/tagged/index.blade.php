@@ -19,9 +19,9 @@
                         <a class="h6" href="{{ route('tagged',['tags' => $tag]) }}">{{ $tag }}</a>
                     </span>
                 @empty
-                    <h6>No tags selected</h6>
+                    <span class="h6">No tags selected</span>
                 @endforelse
-                <span class="me-4">
+                <span class="ms-3">
                    <a href="#" x-on:click.prevent="search=!search" class="text-black-50"><i class="fas fa-search-plus"></i></a>
                 </span>
             </div>

@@ -92,7 +92,7 @@ class BaseContentService
      */
     public function getTag(): string
     {
-        return $this->tag;
+        return strtolower($this->tag);
     }
 
     /**

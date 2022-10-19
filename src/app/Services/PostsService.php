@@ -47,9 +47,7 @@ class PostsService
         $count = $query->count();
 
         return [
-            $query
-            ->limit((int) config('posts.max_daily_posts'))
-            ->paginate($perPage),
+            $query->limit($perPage)->get(),
             $count
         ];
     }
@@ -67,9 +65,9 @@ class PostsService
             $perPage = config("posts.per_page") * 2;
         }
 
-        $tags = $this->parseTags($values['tags']);
+        $tags = $this->parseTags($values['tags'] ?? '');
         if (empty($tags)) {
-            return [null, []];
+            return [null, [], 0];
         }
 
         $query = Post::with('item')
@@ -84,7 +82,9 @@ class PostsService
         $count = $query->count();
 
         return [
-            $query->cache(600)->paginate($perPage),
+            $query->cache(600)
+                ->limit($perPage)
+                ->get(),
             $tags,
             $count
         ];

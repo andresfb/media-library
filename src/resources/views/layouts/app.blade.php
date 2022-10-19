@@ -41,6 +41,11 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ Route::is('tagged') ? 'active' : '' }} " href="{{ route('tagged') }}">
+                            Tagged Posts
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ Route::is('tags') ? 'active' : '' }} " href="{{ route('tags') }}">
                             Tags
                         </a>
                     </li>

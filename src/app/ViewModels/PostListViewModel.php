@@ -6,13 +6,13 @@ use App\Models\Media;
 use App\Models\Post;
 use App\Services\AvatarGeneratorService;
 use GrahamCampbell\Markdown\Facades\Markdown;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Spatie\ViewModels\ViewModel;
 use Illuminate\Support\Collection as SimpleCollection;
 
 class PostListViewModel extends ViewModel
 {
-    private LengthAwarePaginator $postList;
+    private ?Collection $postList;
 
     private AvatarGeneratorService $service;
 
@@ -20,7 +20,7 @@ class PostListViewModel extends ViewModel
 
     public int $postCount = 0;
 
-    public function __construct(LengthAwarePaginator $postList, int $postCount)
+    public function __construct(?Collection $postList, int $postCount)
     {
         $this->postList = $postList;
         $this->service = resolve(AvatarGeneratorService::class);
@@ -37,6 +37,10 @@ class PostListViewModel extends ViewModel
     {
         if ($this->posts->isNotEmpty()) {
             return $this->posts;
+        }
+
+        if (empty($this->postList)) {
+            return collect([]);
         }
 
         $this->posts = $this->postList->map(function (Post $post) {
