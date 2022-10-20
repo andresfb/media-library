@@ -6,6 +6,9 @@
 - [ ] Add a link to full image in the Tagged Posts page.
 - [ ] Create a new `feeds` table to hold the list of Posts Ids and use those to load the actual Post in the PostService. The service should now load them in order of creation.
 - [ ] Create a job that add records to the `feeds` table from random Posts at a rate of 500 per day.
+- [ ] Clear the Tags cache when a new one is created. Might need to add my own Tag model and trigger it on the create event.
+- [ ] Clear the query cache as well. See [here](https://github.com/Laragear/CacheQuery#forgetting-results-with-a-key)
+- [ ] Update the `->cache()` queries to use the `now()->addMinutes(5) format.
  
 ### Completed
 - [x] Add a new 'active' field to Items table and default to true.
@@ -18,7 +21,7 @@
 - [x] Add a new Comments table and relate it to Post.
 - [x] Add the ability to assign new tags.
 - [x] Wire the `comments, info, and settings` buttons in the content page.
-- [X] Create the Tags page.
+- [x] Create the Tags page.
 - [x] Wire the `loader <div>` to a livewire component and load the next page of posts (added a refresh button instead).
 
 ### Not Implemented

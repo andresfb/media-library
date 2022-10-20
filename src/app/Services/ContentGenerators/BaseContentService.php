@@ -64,7 +64,7 @@ class BaseContentService
 
         $this->totalRecords = $this->model
             ->where('used', '<=', $this->maxContentReuse)
-            ->cache(604800)
+            ->cache(now()->addDays(7))
             ->count();
 
         return $this->totalRecords;

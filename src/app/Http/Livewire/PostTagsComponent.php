@@ -106,6 +106,7 @@ class PostTagsComponent extends Component
         $post->status = 1;
         $post->save();
 
+        $this->clearCache();
         $this->loadTags($post);
         $this->reset();
     }
@@ -138,6 +139,7 @@ class PostTagsComponent extends Component
 
         $post->detachTag($tag);
 
+        $this->clearCache();
         $this->loadTags($post);
         $this->reset();
     }
@@ -216,5 +218,11 @@ class PostTagsComponent extends Component
     private function loadTags(Post $post): void
     {
         $this->tags = $post->tags()->pluck('name')->sort();
+    }
+
+    private function clearCache()
+    {
+        // TODO clear Query caches for tags and tagged
+        // TODO clear List cache for tags
     }
 }

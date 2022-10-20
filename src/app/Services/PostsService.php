@@ -83,6 +83,8 @@ class PostsService
 
         $count = $query->count();
 
+        // TODO: add cache key
+        // TODO: change ttl
         return [
             $query->cache(600)
                 ->limit($perPage)
