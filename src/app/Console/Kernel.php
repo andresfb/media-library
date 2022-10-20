@@ -3,9 +3,12 @@
 namespace App\Console;
 
 use App\Jobs\ExtractExifJob;
+use App\Jobs\GenerateFeedJob;
 use App\Jobs\GeneratePostJob;
 use App\Jobs\ImportMediaJob;
+use App\Services\AvatarGeneratorService;
 use App\Services\ExtractExifService;
+use App\Services\GenerateFeedService;
 use App\Services\ImportMediaService;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -28,6 +31,11 @@ class Kernel extends ConsoleKernel
 
         $schedule->job(new GeneratePostJob(), 'default')
             ->cron("15 11,15,19,23 * * *");
+
+        $schedule->job(
+            new GenerateFeedJob(new GenerateFeedService(new AvatarGeneratorService())),
+            'default'
+        )->dailyAt("12:00");
     }
 
     /**

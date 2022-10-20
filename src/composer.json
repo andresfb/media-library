@@ -16,6 +16,7 @@
         "fakerphp/faker": "^1.9.1",
         "graham-campbell/markdown": "^14.0",
         "guzzlehttp/guzzle": "^7.2",
+        "jenssegers/mongodb": "^3.9",
         "laragear/cache-query": "^3.0",
         "laravel/framework": "^9.19",
         "laravel/horizon": "^5.10",

@@ -12,6 +12,7 @@ class ContentOrchestratorService
 
     private bool $loaded = false;
 
+
     public function __construct()
     {
         $this->total = (int) config('posts.max_random_posts');
@@ -87,6 +88,7 @@ class ContentOrchestratorService
     {
         $this->service->markUsed();
     }
+
 
     /**
      * loadSources Method.

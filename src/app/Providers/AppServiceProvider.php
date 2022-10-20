@@ -3,9 +3,12 @@
 namespace App\Providers;
 
 use App\Services\AvatarGeneratorService;
+use App\Services\ContentGenerators\ContentOrchestratorService;
 use App\Services\ConvertHeicToJpgService;
 use App\Services\CreateThumbnailService;
 use App\Services\ExtractExifService;
+use App\Services\GenerateFeedService;
+use App\Services\GeneratePostsService;
 use App\Services\ImportMediaService;
 use Illuminate\Support\ServiceProvider;
 
@@ -36,6 +39,14 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(CreateThumbnailService::class, function () {
             return new CreateThumbnailService();
+        });
+
+        $this->app->bind(GeneratePostsService::class, function () {
+            return new GeneratePostsService(new ContentOrchestratorService());
+        });
+
+        $this->app->bind(GenerateFeedService::class, function () {
+            return new GenerateFeedService(new AvatarGeneratorService());
         });
     }
 

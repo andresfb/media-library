@@ -12,8 +12,9 @@ It uses a **Social Media** styled frontend to show the files in random order and
 5. Spatie Tags 4.x
 6. Spatie View Models 1.x
 7. Livewire 2.x
-8. Bootstrap 5.x
-9. [Minty](https://bootswatch.com/minty/) Bootswatch template
+8. Jenssegers MongoDB 3.x / MongoDB 5.x
+9. Bootstrap 5.x
+10. [Minty](https://bootswatch.com/minty/) Bootswatch template
 
 ### Post's Sources
 Free, downloadable versions of the following:

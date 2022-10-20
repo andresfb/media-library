@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Post;
+use App\Traits\PostFeedFindable;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -11,6 +12,8 @@ use Livewire\Component;
 
 class PostActionsComponent extends Component
 {
+    use PostFeedFindable;
+
     public int $postId = 0;
 
     /**
@@ -20,16 +23,21 @@ class PostActionsComponent extends Component
      */
     public function disable()
     {
-        $post = Post::find($this->postId);
-        if (empty($post)) {
-            session()->flash("error", "Post not found with Id: $this->postId");
+        $result = $this->getModels($this->postId);
+        if (!$result) {
             return;
         }
+
+        [$post, $feed] = $result;
 
         $post->status = 2;
         $post->save();
 
         $post->item()->update(['active' => 0]);
+        $post->delete();
+
+        $feed->status = 2;
+        $feed->save();
         $post->delete();
 
         return redirect()->route('home');

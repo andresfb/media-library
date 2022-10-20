@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\ConvertDateTimeToTimezone;
 use Dyrynda\Database\Support\CascadeSoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -54,5 +55,20 @@ class Post extends Model
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * scopeUnused Method.
+     *
+     * @param Builder $query
+     * @param int $howMany
+     * @return Builder
+     */
+    public function scopeUnused(Builder $query, int $howMany): Builder
+    {
+        return $query->where('status', 0)
+            ->where('used', false)
+            ->inRandomOrder()
+            ->limit($howMany);
     }
 }

@@ -32,7 +32,7 @@ class TestAppCommand extends Command
             $this->warn("Error found");
             $this->error($e->getMessage());
             $this->newLine();
-            return 0;
+            return 1;
         }
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Post;
+use App\Traits\PostFeedFindable;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -13,11 +14,13 @@ use Spatie\Tags\Tag;
 
 class PostTagsComponent extends Component
 {
+    use PostFeedFindable;
+
     public int $postId = 0;
 
     public string $search = "";
 
-    public Collection $tags;
+    public array $tags;
 
     public Collection $tagList;
 
@@ -96,15 +99,20 @@ class PostTagsComponent extends Component
             ->stripTags()
             ->toString();
 
-        $post = Post::find($this->postId);
-        if (empty($post)) {
-            session()->flash("error", "Post not found with Id: $this->postId");
+        $result = $this->getModels($this->postId);
+        if (!$result) {
             return;
         }
+
+        [$post, $feed] = $result;
 
         $post->attachTag($tag);
         $post->status = 1;
         $post->save();
+
+        $feed->status = 1;
+        $feed->push('tags', $tag, true);
+        $feed->save();
 
         $this->loadTags($post);
         $this->reset();
@@ -215,6 +223,9 @@ class PostTagsComponent extends Component
      */
     private function loadTags(Post $post): void
     {
-        $this->tags = $post->tags()->pluck('name')->sort();
+        $this->tags = $post->tags()
+            ->pluck('name')
+            ->sort()
+            ->toArray();
     }
 }
