@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Services\ContentGenerators;
+namespace App\Services;
 
 use App\Models\Item;
 use App\Models\Post;
+use App\Services\ContentGenerators\ContentOrchestratorService;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -43,6 +44,7 @@ class GeneratePostsService
         $this->generatePosts($items);
         Log::info("Generating Posts finished at Generated {$this->generated}");
     }
+
 
     /**
      * generatePosts Method.

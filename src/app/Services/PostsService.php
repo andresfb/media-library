@@ -19,41 +19,6 @@ class PostsService
     }
 
     /**
-     * getLatest Method.
-     *
-     * @param array $values
-     * @param int $perPage
-     * @return array
-     */
-    public function getLatest(array $values, int $perPage = 0): array
-    {
-        if (empty($perPage)) {
-            $perPage = config("posts.per_page");
-        }
-
-        $query = Post::select('posts.*')
-            ->whereStatus(0)
-            ->with('tags')
-            ->join('items', 'posts.item_id', '=', 'items.id')
-            ->where('items.active', true)
-            ->with('item')
-            ->with('item.media')
-            ->with('comments')
-            ->inRandomOrder();
-
-        if (!empty($values['type'])) {
-            $query->where('posts.type', $values['type']);
-        }
-
-        $count = $query->count();
-
-        return [
-            $query->limit($perPage)->get(),
-            $count
-        ];
-    }
-
-    /**
      * getTagged Method.
      *
      * @param array $values
@@ -86,9 +51,7 @@ class PostsService
         // TODO: add cache key
         // TODO: change ttl
         return [
-            $query->cache(600)
-                ->limit($perPage)
-                ->get(),
+            $query->cache(600)->limit($perPage)->get(),
             $tags,
             $count
         ];

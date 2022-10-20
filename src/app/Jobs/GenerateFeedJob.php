@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Services\GeneratePostsService;
+use App\Services\GenerateFeedService;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,16 +11,15 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class GeneratePostJob implements ShouldQueue
+class GenerateFeedJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private GeneratePostsService $service;
+    private GenerateFeedService $service;
 
-
-    public function __construct(GeneratePostsService $service = null)
+    public function __construct(GenerateFeedService $service)
     {
-        $this->service = $service ?? resolve(GeneratePostsService::class);
+        $this->service = $service;
     }
 
     /**

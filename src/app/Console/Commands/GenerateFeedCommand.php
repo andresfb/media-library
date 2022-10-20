@@ -2,18 +2,17 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\GeneratePostJob;
-use App\Services\GeneratePostsService;
+use App\Jobs\GenerateFeedJob;
+use App\Services\AvatarGeneratorService;
+use App\Services\GenerateFeedService;
 use Exception;
 use Illuminate\Console\Command;
 
-class GeneratePostsCommand extends Command
+class GenerateFeedCommand extends Command
 {
-    /** @var string */
-    protected $signature = 'generate:posts';
+    protected $signature = 'generate:feed';
 
-    /** @var string */
-    protected $description = 'Generate a set of random Posts';
+    protected $description = 'Save the info of a given number of Posts into the Feed Mongo collection';
 
 
     /**
@@ -25,15 +24,17 @@ class GeneratePostsCommand extends Command
     {
         try {
             if ($this->confirm("Send job to Queue")) {
-                GeneratePostJob::dispatch()->onQueue('default');
+                GenerateFeedJob::dispatch(
+                    new GenerateFeedService(new AvatarGeneratorService())
+                )->onQueue('default');
 
                 $this->info("\nDone\n");
                 return 0;
             }
 
-            $howMany = (int) $this->ask("How many posts", 1000);
+            $howMany = (int) $this->ask("How many Posts", (int) config('posts.max_daily_feed'));
 
-            $service = resolve(GeneratePostsService::class);
+            $service = resolve(GenerateFeedService::class);
             $service->execute($howMany);
 
             $this->info("\nDone\n");

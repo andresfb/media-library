@@ -3,7 +3,9 @@
 namespace App\Http\Livewire;
 
 use App\Models\Comment;
+use App\Models\Feed;
 use App\Models\Post;
+use App\Traits\PostFeedFindable;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -13,9 +15,11 @@ use Livewire\Component;
 
 class PostCommentsComponent extends Component
 {
+    use PostFeedFindable;
+
     public int $postId = 0;
 
-    public Collection $comments;
+    public array $comments;
 
     public string $comment = "";
 
@@ -37,15 +41,19 @@ class PostCommentsComponent extends Component
                 ->stripTags()
                 ->toString();
 
-        $post = Post::find($this->postId);
-        if (empty($post)) {
-            session()->flash("error", "Post not found with Id: $this->postId");
+        $result = $this->getModels($this->postId);
+        if (!$result) {
             return;
         }
+
+        [$post, $feed] = $result;
 
         $post->comments()->create([
             'comment' => $comment
         ]);
+
+        $feed->push('comments', $comment, true);
+        $feed->save();
 
         $this->comment = "";
 
@@ -54,7 +62,7 @@ class PostCommentsComponent extends Component
                 'date' => $comment->created_at->longAbsoluteDiffForHumans(),
                 'comment' => $comment->comment,
             ];
-        });
+        })->toArray();
     }
 
     /**

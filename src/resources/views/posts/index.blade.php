@@ -59,7 +59,7 @@
 
                         <!-- Buttons -->
                         <div class="d-flex justify-content-end socials p-1 py-2">
-                            <i @click="comments=!comments" class="fa fa-comments @if($post['comments']->isNotEmpty()) text-black-50 @endif"></i>
+                            <i @click="comments=!comments" class="fa fa-comments @if(!empty($post['comments'])) text-black-50 @endif"></i>
                             <i @click="info=!info" class="fas fa-info-circle @if(!empty($post['extra_info'])) text-black-50 @endif"></i>
                             <i @click="actions=!actions" class="fa fa-cogs"></i>
                         </div>

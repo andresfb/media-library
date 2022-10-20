@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\PostsService;
-use App\ViewModels\PostListViewModel;
+use App\Models\Feed;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -17,17 +16,21 @@ class PostsController extends Controller
      *
      * @return Application|Factory|View
      */
-    public function index(Request $request, PostsService $service)
+    public function index(Request $request)
     {
         $values = $request->validate([
             'type' => ['nullable', 'string', Rule::in(['image', 'video'])]
         ]);
 
-        [$posts, $count] = $service->getLatest($values);
+        $query = Feed::pending();
+
+        if (!empty($values['type'])) {
+            $query->where('posts.type', $values['type']);
+        }
 
         return view(
             'posts.index',
-            new PostListViewModel($posts, $count)
+            ['posts' => $query->get()]
         );
     }
 }
