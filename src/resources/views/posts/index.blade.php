@@ -9,10 +9,11 @@
 
                 @forelse($posts as $post)
 
-                    <div class="bg-white border mt-2 mb-3" x-data="{
+                    <div x-show="card" class="bg-white border mt-2 mb-3" x-data="{
                         comments: false,
                         info: false,
-                        actions: false
+                        actions: false,
+                        card: true
                     }">
 
                         <!-- Poster -->
@@ -58,10 +59,27 @@
                         </div>
 
                         <!-- Buttons -->
-                        <div class="d-flex justify-content-end socials p-1 py-2">
-                            <i @click="comments=!comments" class="fa fa-comments @if(!empty($post['comments'])) text-black-50 @endif"></i>
-                            <i @click="info=!info" class="fas fa-info-circle @if(!empty($post['extra_info'])) text-black-50 @endif"></i>
-                            <i @click="actions=!actions" class="fa fa-cogs"></i>
+                        <div class="d-flex justify-content-end px-1 py-2 mb-2">
+                            <a href="#"
+                               @click.prevent="comments=!comments"
+                               class="text-muted">
+                                <i class="fa-regular fa-lg fa-comments me-3"></i>
+                            </a>
+                            <a href="#"
+                               @click.prevent="info=!info"
+                               class="text-muted">
+                                <i class="fa-solid fa-lg fa-circle-info me-3"></i>
+                            </a>
+                            <a href="#"
+                                @click.prevent="actions=!actions"
+                                class="text-muted">
+                                <i class="fa-solid fa-lg fa-sliders me-3"></i>
+                            </a>
+                            <a href="#"
+                                @click.prevent="card=false"
+                                class="text-muted">
+                                <i class="fa-solid fa-lg fa-eye-slash me-2"></i>
+                            </a>
                         </div>
 
                         <!-- Comments -->
