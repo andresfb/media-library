@@ -22,7 +22,7 @@
                                 <img class="rounded-circle" src="{{ $post['avatar'] }}" width="45" alt="avatar">
                                 <div class="d-flex flex-column flex-wrap">
                                     <span class="fw-semibold mx-2">{{ $post['name'] }}</span>
-                                    <span class="text-black-50 time mx-2">{{ $post['date'] }} ago</span>
+                                    <span class="text-black-50 time mx-2">{{ $post['date']->longAbsoluteDiffForHumans() }} ago</span>
                                 </div>
                             </div>
                         </div>
@@ -59,26 +59,26 @@
                         </div>
 
                         <!-- Buttons -->
-                        <div class="d-flex justify-content-end px-1 py-2 mb-2">
+                        <div class="d-flex justify-content-start px-1 py-2 ms-3 mb-2">
                             <a href="#"
-                               @click.prevent="comments=!comments"
+                               @click.prevent="card=false"
                                class="text-muted">
-                                <i class="fa-regular fa-lg fa-comments me-3"></i>
+                                <i class="fa-solid fa-lg fa-eye-slash me-4"></i>
+                            </a>
+                            <a href="#"
+                               @click.prevent="actions=!actions"
+                               class="text-muted">
+                                <i class="fa-solid fa-lg fa-sliders me-4"></i>
                             </a>
                             <a href="#"
                                @click.prevent="info=!info"
                                class="text-muted">
-                                <i class="fa-solid fa-lg fa-circle-info me-3"></i>
+                                <i class="fa-solid fa-lg fa-circle-info me-4"></i>
                             </a>
                             <a href="#"
-                                @click.prevent="actions=!actions"
-                                class="text-muted">
-                                <i class="fa-solid fa-lg fa-sliders me-3"></i>
-                            </a>
-                            <a href="#"
-                                @click.prevent="card=false"
-                                class="text-muted">
-                                <i class="fa-solid fa-lg fa-eye-slash me-2"></i>
+                               @click.prevent="comments=!comments"
+                               class="text-muted">
+                                <i class="fa-regular fa-lg fa-comments me-4"></i>
                             </a>
                         </div>
 
