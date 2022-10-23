@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
             ->hourly();
 
         $schedule->job(new ImportMediaJob(new ImportMediaService()), 'ingestor')
-            ->twiceDaily(11, 17);
+            ->dailyAt(17);
 
         $schedule->job(new GeneratePostJob(), 'default')
             ->cron("15 11,15,19,23 * * *");

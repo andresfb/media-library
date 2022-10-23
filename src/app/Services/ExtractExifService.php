@@ -68,17 +68,25 @@ class ExtractExifService
      */
     private function getExit(Item $item): array
     {
-        $file = !empty($item->media) && !$item->media->isEmpty()
-            ? $item->getMedia($item->type)->first()->getPath()
-            : sprintf("%s%s/%s", config('raw-files.path'), $item->og_path, $item->og_file);
+        try {
+            $media = $item->getMedia($item->type)->first();
+            if (empty($media)) {
+                Item::disable($item->id);
+                return [];
+            }
 
-        if (!file_exists($file)) {
+            $file = $media->getPath();
+            if (!file_exists($file)) {
+                return [];
+            }
+
+            return $item->type == "image"
+                ? $this->getImageExit($file)
+                : $this->getVideoExif($file);
+        } catch (Exception $e) {
+            Log::error("ExtractExifService@getExit with Item Id: $item->id: " . $e->getMessage());
             return [];
         }
-
-        return $item->type == "image"
-            ? $this->getImageExit($file)
-            : $this->getVideoExif($file);
     }
 
     /**

@@ -55,14 +55,13 @@ class GenerateFeedService
         Log::info("Generating Feed finished at Generated {$this->generated}");
     }
 
-
     /**
      * generateFeed Method.
      *
      * @param Collection $posts
      * @return void
      */
-    private function generateFeed(Collection $posts): void
+    public function generateFeed(Collection $posts): void
     {
         if ($posts->isEmpty()) {
             Log::info("No new Post found.");
@@ -146,7 +145,7 @@ class GenerateFeedService
         $comments = [];
         foreach ($post->comments as $comment) {
             $comments[] = [
-                'date' => $comment->created_at->longAbsoluteDiffForHumans(),
+                'date' => $comment->created_at,
                 'comment' => $comment->comment,
             ];
         }

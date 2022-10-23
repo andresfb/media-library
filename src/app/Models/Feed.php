@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Carbon;
 use Jenssegers\Mongodb\Eloquent\Builder;
 use Jenssegers\Mongodb\Eloquent\Model;
 use Jenssegers\Mongodb\Eloquent\SoftDeletes;
@@ -9,8 +10,11 @@ use Jenssegers\Mongodb\Eloquent\SoftDeletes;
 /**
  * Feed class
  *
+ * @property int $id
+ * @property string $name
  * @property array $tags
  * @property boolean $status
+ * @property Carbon $date
  */
 class Feed extends Model
 {

@@ -116,6 +116,7 @@ class Item extends Model implements HasMedia
 
             $item->active = false;
             $item->save();
+            Log::info("Disabled Item Id: $itemId");
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
