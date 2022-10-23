@@ -84,7 +84,7 @@
 
                         <!-- Comments -->
                         <livewire:post-comments-component
-                            :comments="$post['comments']"
+                            :comments="[]"
                             :postId="$post['id']"
                             wire:key="post-comments-{{ $post['id'] }}" />
 

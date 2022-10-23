@@ -51,7 +51,7 @@ class GenerateFeedService
             return;
         }
 
-        $this->generateFeed($posts);
+        $this->generateFeed($posts, false);
         Log::info("Generating Feed finished at Generated {$this->generated}");
     }
 
@@ -59,9 +59,10 @@ class GenerateFeedService
      * generateFeed Method.
      *
      * @param Collection $posts
+     * @param boolean $postStatus
      * @return void
      */
-    public function generateFeed(Collection $posts): void
+    public function generateFeed(Collection $posts, bool $postStatus): void
     {
         if ($posts->isEmpty()) {
             Log::info("No new Post found.");
@@ -71,7 +72,7 @@ class GenerateFeedService
         /** @var Post $post */
         foreach ($posts as $post) {
             try {
-                [$postId, $tags, $postData] = $this->getFeed($post);
+                [$postId, $tags, $postData] = $this->getFeed($post, $postStatus);
                 if (empty($postId)) {
                     continue;
                 }
@@ -102,9 +103,10 @@ class GenerateFeedService
      * getFeed Method.
      *
      * @param Post $post
+     * @param bool $postStatus
      * @return array
      */
-    private function getFeed(Post $post): array
+    private function getFeed(Post $post, bool $postStatus): array
     {
         if (empty($post->item->media)) {
             return [0, []];
@@ -135,7 +137,7 @@ class GenerateFeedService
             'Original Location' => sprintf("%s%s/", config('raw-files.path'), $post->item->og_path),
             'Original File' => $post->item->og_file,
             'File Size' => number_format($fileSize) . " $measurement",
-            'Imported On' => $post->item->created_at
+            'Imported On' => $post->item->created_at->toDateTimeString(),
         ];
 
         if (!empty($post->item->exif)) {
@@ -145,7 +147,7 @@ class GenerateFeedService
         $comments = [];
         foreach ($post->comments as $comment) {
             $comments[] = [
-                'date' => $comment->created_at,
+                'date' => $comment->created_at->toDateTimeString(),
                 'comment' => $comment->comment,
             ];
         }
@@ -160,7 +162,7 @@ class GenerateFeedService
                 'poster' => $poster,
                 'mime_type' => $media->mime_type,
                 'aspect' => $extra['aspect'] ?? '1x1',
-                'status' => 0,
+                'status' => $postStatus ? $post->status : 0,
                 'type' => $post->type,
                 'slug' => $post->slug,
                 'title' => $post->title,

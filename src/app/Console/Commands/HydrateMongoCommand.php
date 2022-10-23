@@ -40,7 +40,7 @@ class HydrateMongoCommand extends Command
                 ->chunk(200, function (Collection $posts) {
                     $this->newLine();
                     $this->warn("Saving {$posts->count()} Posts\n");
-                    $this->service->generateFeed($posts);
+                    $this->service->generateFeed($posts, true);
                     $this->newLine();
                     usleep(700);
                 });
