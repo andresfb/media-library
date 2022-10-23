@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Post;
 use App\Traits\PostFeedFindable;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -15,6 +14,7 @@ class PostActionsComponent extends Component
     use PostFeedFindable;
 
     public int $postId = 0;
+
 
     /**
      * disable Method.

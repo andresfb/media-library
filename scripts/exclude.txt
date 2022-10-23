@@ -20,5 +20,6 @@ tests
 storage
 vendor
 node_modules
+public/media
 bootstrap/cache
 resources/sass/bootstrap

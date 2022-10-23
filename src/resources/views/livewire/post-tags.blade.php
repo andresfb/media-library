@@ -47,19 +47,19 @@
 
         <div class="mt-3">
             @foreach($tags as $tag)
-                <span class="badge rounded-pill text-bg-secondary fw-semibold h6 me-2">
+                <span class="me-2">
                     <a href="#"
                        wire:click.prevent="deleteTag('{{ $tag }}')"
-                       class="tag-link text-decoration-none text-white p-1">
+                       class="text-decoration-none text-danger">
                         {{ $tag }}
                         <i class="fas fa-ban"></i>
                     </a>
                 </span>
             @endforeach
-            <span class="badge rounded-pill text-bg-warning fw-semibold h6 ms-2">
-                <a href="#"
-                   wire:click.prevent="cancel"
-                   class="tag-link text-decoration-none text-white p-2">Cancel</a>
+            <span class="ms-2">
+                <a href="#" wire:click.prevent="cancel" class="text-warning">
+                    <i class="fa-regular fa-xl fa-rectangle-xmark"></i>
+                </a>
             </span>
         </div>
     </div>
@@ -72,10 +72,10 @@
                 <a href="{{ route('tagged',['tags' => $tag]) }}" target="_blank" class="tag-link">{{ $tag }}</a>
             </span>
         @endforeach
-        <span class="badge rounded-pill text-bg-success fw-semibold h6 ms-2">
-            <a href="#"
-               wire:click.prevent="$toggle('editTags')"
-               class="tag-link text-decoration-none text-white p-3">Edit</a>
+        <span class="ms-3">
+            <a href="#" wire:click.prevent="$toggle('editTags')" class="text-info">
+                <i class="fa-regular fa-xl fa-square-plus"></i>
+            </a>
         </span>
     </div>
 @endif

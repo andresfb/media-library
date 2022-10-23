@@ -10,6 +10,7 @@ use App\Services\ExtractExifService;
 use App\Services\GenerateFeedService;
 use App\Services\GeneratePostsService;
 use App\Services\ImportMediaService;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -57,6 +58,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Paginator::useBootstrapFive();
     }
 }

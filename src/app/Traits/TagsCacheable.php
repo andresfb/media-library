@@ -2,14 +2,20 @@
 
 namespace App\Traits;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 trait TagsCacheable
 {
-    public function getAllTags()
+    /**
+     * getAllTags Method.
+     *
+     * @return Collection
+     */
+    public function getAllTags(): Collection
     {
-        $key = 'ALL:TAGS:%s';
+        $key = config('cache-constants.tags_key');
         $tags = Cache::get($key);
         if (!empty($tags)) {
             return $tags;
@@ -17,7 +23,7 @@ trait TagsCacheable
 
         $tags = DB::table('tags')
             ->select('name')
-            ->cache(now()->addMinutes(5), sprintf($key, 'Q'))
+            ->cache(now()->addMinutes(5), config('cache-constants.query_tags_key'))
             ->get()
             ->pluck('name')
             ->map(function ($tag) {
@@ -28,7 +34,23 @@ trait TagsCacheable
             return collect([]);
         }
 
-        Cache::put(sprintf($key, 'L'), $tags, now()->addMinutes(10));
+        Cache::put($key, $tags, now()->addMinutes(10));
         return $tags;
+    }
+
+    /**
+     * clearCache Method.
+     *
+     * @return void
+     */
+    public function clearCache(): void
+    {
+        // Clear the Tags list cache
+        $key = config('cache-constants.tags_key');
+        Cache::forget($key);
+
+        // Clear the Query Tags list cache
+        $key = config('cache-constants.query_tags_key');
+        Cache::forget($key);
     }
 }

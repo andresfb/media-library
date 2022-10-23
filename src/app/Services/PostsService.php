@@ -13,6 +13,7 @@ class PostsService
 
     private Collection $tags;
 
+
     public function __construct()
     {
         $this->tags = collect([]);
@@ -33,7 +34,7 @@ class PostsService
 
         $tags = $this->parseTags($values['tags'] ?? '');
         if (empty($tags)) {
-            return [null, [], 0];
+            return [null, collect([]), 0];
         }
 
         $query = Post::with('item')
@@ -48,11 +49,9 @@ class PostsService
 
         $count = $query->count();
 
-        // TODO: add cache key
-        // TODO: change ttl
         return [
-            $query->cache(600)->limit($perPage)->get(),
-            $tags,
+            $query->paginate($perPage),
+            collect($tags),
             $count
         ];
     }

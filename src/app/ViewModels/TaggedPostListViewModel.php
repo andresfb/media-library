@@ -4,7 +4,7 @@ namespace App\ViewModels;
 
 use App\Models\Media;
 use App\Models\Post;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection as SimpleCollection;
 use Spatie\ViewModels\ViewModel;
 
@@ -12,13 +12,14 @@ class TaggedPostListViewModel extends ViewModel
 {
     public int $postCount = 0;
 
-    public array $selected;
+    public SimpleCollection $selected;
 
-    private ?Collection $postList;
+    public ?LengthAwarePaginator $postList;
 
     private SimpleCollection $posts;
 
-    public function __construct(?Collection $postList, array $tags, int $postCount)
+
+    public function __construct(?LengthAwarePaginator $postList, SimpleCollection $tags, int $postCount)
     {
         $this->postList = $postList;
         $this->selected = $tags;
@@ -72,5 +73,40 @@ class TaggedPostListViewModel extends ViewModel
         })->collect();
 
         return $this->posts;
+    }
+
+    /**
+     * removeTag Method.
+     *
+     * @param $value
+     * @return string
+     */
+    public function removeTag(string $value): string
+    {
+        if (!$this->selected->contains($value)) {
+            return "";
+        }
+
+        return $this->selected->reject(function ($tag) use ($value) {
+            return $tag == $value;
+        })->implode(",");
+    }
+
+    /**
+     * addTag Method.
+     *
+     * @param string $value
+     * @return string
+     */
+    public function addTag(string $value): string
+    {
+        if ($this->selected->contains($value)) {
+            return $this->selected->implode(",");
+        }
+
+        $tags = collect($this->selected->all());
+
+        return $tags->add($value)
+            ->implode(",");
     }
 }

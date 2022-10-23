@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Post;
 use App\Traits\PostFeedFindable;
+use App\Traits\TagsCacheable;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -12,68 +13,16 @@ use Illuminate\Support\Str;
 use Livewire\Component;
 use Spatie\Tags\Tag;
 
-class PostTagsComponent extends Component
+class PostTagsComponent extends BaseSearchTagComponent
 {
-    use PostFeedFindable;
+    use PostFeedFindable, TagsCacheable;
 
     public int $postId = 0;
 
-    public string $search = "";
-
     public array $tags;
-
-    public Collection $tagList;
 
     public bool $editTags = false;
 
-    public int $selectedIndex = -1;
-
-    protected array $rules = [
-        'search' => 'required|string|min:2'
-    ];
-
-    /**
-     * mount Method.
-     *
-     * @return void
-     */
-    public function mount(): void
-    {
-        $this->tagList = collect([]);
-    }
-
-    /**
-     * updatedSearch Method.
-     *
-     * @param $value
-     * @return void
-     */
-    public function updatedSearch($value): void
-    {
-        if (strlen($value) <= 1) {
-            $this->resetTagList();
-            return;
-        }
-
-        $this->validate();
-
-        $this->tagList = Tag::select('name')
-            ->containing($value)
-            ->limit(10)
-            ->get()
-            ->pluck('name')
-            ->sort();
-    }
-
-    /**
-     * resetTagList Method.
-     *
-     * @return void
-     */
-    public function resetTagList(): void
-    {
-        $this->tagList = collect([]);
-    }
 
     /**
      * addTag Method.
@@ -83,21 +32,7 @@ class PostTagsComponent extends Component
      */
     public function addTag(string $value = ""): void
     {
-        if ($this->selectedIndex != -1) {
-            $value = $this->tagList[$this->selectedIndex];
-        }
-
-        if (empty(trim($value))) {
-            $this->validate();
-            $value = $this->search;
-        }
-
-        $tag = Str::of($value)
-            ->trim()
-            ->lower()
-            ->replace([",", "'", '"', "|", "*", "!", "`"], "")
-            ->stripTags()
-            ->toString();
+        $tag = $this->parseSearch($value);
 
         $result = $this->getModels($this->postId);
         if (!$result) {
@@ -114,7 +49,6 @@ class PostTagsComponent extends Component
         $feed->push('tags', $tag, true);
         $feed->save();
 
-        $this->clearCache();
         $this->loadTags($post);
         $this->reset();
     }
@@ -147,39 +81,8 @@ class PostTagsComponent extends Component
 
         $post->detachTag($tag);
 
-        $this->clearCache();
         $this->loadTags($post);
         $this->reset();
-    }
-
-    /**
-     * increment Method.
-     *
-     * @return void
-     */
-    public function increment(): void
-    {
-        if ($this->selectedIndex == $this->tagList->count() - 1) {
-            $this->selectedIndex = 0;
-            return;
-        }
-
-        $this->selectedIndex++;
-    }
-
-    /**
-     * decrement Method.
-     *
-     * @return void
-     */
-    public function decrement(): void
-    {
-        if ($this->selectedIndex == 0) {
-            $this->selectedIndex = $this->tagList->count() - 1;
-            return;
-        }
-
-        $this->selectedIndex--;
     }
 
     /**
@@ -189,21 +92,9 @@ class PostTagsComponent extends Component
      */
     public function cancel(): void
     {
+        $this->clearCache();
         $this->reset();
         $this->editTags = false;
-    }
-
-    /**
-     * reset Method.
-     *
-     * @param ...$properties
-     * @return void
-     */
-    public function reset(...$properties): void
-    {
-        $this->search = "";
-        $this->selectedIndex = -1;
-        $this->resetTagList();
     }
 
     /**
@@ -229,11 +120,5 @@ class PostTagsComponent extends Component
             ->pluck('name')
             ->sort()
             ->toArray();
-    }
-
-    private function clearCache()
-    {
-        // TODO clear Query caches for tags and tagged
-        // TODO clear List cache for tags
     }
 }

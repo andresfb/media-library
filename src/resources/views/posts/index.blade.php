@@ -61,24 +61,24 @@
                         <!-- Buttons -->
                         <div class="d-flex justify-content-start px-1 py-2 ms-3 mb-2">
                             <a href="#"
-                               @click.prevent="card=false"
+                               @click.prevent="comments=!comments"
                                class="text-muted">
-                                <i class="fa-solid fa-lg fa-eye-slash me-4"></i>
-                            </a>
-                            <a href="#"
-                               @click.prevent="actions=!actions"
-                               class="text-muted">
-                                <i class="fa-solid fa-lg fa-sliders me-4"></i>
+                                <i class="fa-regular fa-lg fa-comments me-5"></i>
                             </a>
                             <a href="#"
                                @click.prevent="info=!info"
                                class="text-muted">
-                                <i class="fa-solid fa-lg fa-circle-info me-4"></i>
+                                <i class="fa-solid fa-lg fa-circle-info me-5"></i>
                             </a>
                             <a href="#"
-                               @click.prevent="comments=!comments"
+                               @click.prevent="actions=!actions"
                                class="text-muted">
-                                <i class="fa-regular fa-lg fa-comments me-4"></i>
+                                <i class="fa-solid fa-lg fa-sliders me-5"></i>
+                            </a>
+                            <a href="#"
+                               @click.prevent="card=false"
+                               class="text-muted">
+                                <i class="fa-solid fa-lg fa-eye-slash me-5"></i>
                             </a>
                         </div>
 

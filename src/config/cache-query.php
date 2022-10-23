@@ -26,6 +26,6 @@ return [
     |
     */
 
-    'prefix' => 'cache-query',
+    'prefix' => '',
 
 ];
