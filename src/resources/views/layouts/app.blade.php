@@ -14,7 +14,6 @@
     <title>{{ config('app.name') }}</title>
 
     <link rel="stylesheet" href="/css/bootstrap.min.css">
-{{--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" />--}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
     <link rel="stylesheet" href="/css/app.css">
     <livewire:styles />
@@ -61,6 +60,7 @@
     @yield('content')
 
     <livewire:scripts />
+    <script src="/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js"></script>
 </body>

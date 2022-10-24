@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Feed;
+use App\Models\Post;
+use App\Services\GenerateFeedService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -31,6 +33,31 @@ class PostsController extends Controller
         return view(
             'posts.index',
             ['posts' => $query->get()]
+        );
+    }
+
+    /**
+     * edit Method.
+     *
+     * @param Post $post
+     * @param GenerateFeedService $service
+     * @return Application|Factory|View
+     */
+    public function edit(Post $post, GenerateFeedService $service)
+    {
+        $feed = Feed::where('id', $post->id)->first();
+        if (!empty($feed)) {
+            return view('posts.edit', ['post' => $feed]);
+        }
+
+        [$postId, $tags, $postData] = $service->getFeed($post);
+        if (empty($postId)) {
+            abort(404);
+        }
+
+        return view(
+            'posts.edit',
+            ['post' => $service->saveFeed($postId, $postData, $tags)]
         );
     }
 }

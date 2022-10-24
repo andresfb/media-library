@@ -77,11 +77,7 @@ class GenerateFeedService
                     continue;
                 }
 
-                $feed = Feed::updateOrCreate(['id' => $postId], $postData);
-                foreach ($tags as $tag) {
-                    $feed->push('tags', $tag);
-                }
-                $feed->save();
+                $this->saveFeed($postId, $postData, $tags);
 
                 $post->used = true;
                 $post->save();
@@ -106,16 +102,16 @@ class GenerateFeedService
      * @param bool $postStatus
      * @return array
      */
-    private function getFeed(Post $post, bool $postStatus): array
+    public function getFeed(Post $post, bool $postStatus = false): array
     {
         if (empty($post->item->media)) {
-            return [0, []];
+            return [0, [], []];
         }
 
         /** @var Media $media */
         $media = $post->item->getMedia($post->type)->first();
         if (empty($media)) {
-            return [];
+            return [0, [], []];
         }
 
         $poster = "";
@@ -174,5 +170,24 @@ class GenerateFeedService
                 'tags' => [],
             ]
         ];
+    }
+
+    /**
+     * saveFeed Method.
+     *
+     * @param int $postId
+     * @param array $postData
+     * @param array $tags
+     * @return Feed
+     */
+    public function saveFeed(int $postId, array $postData, array $tags): Feed
+    {
+        $feed = Feed::updateOrCreate(['id' => $postId], $postData);
+        foreach ($tags as $tag) {
+            $feed->push('tags', $tag);
+        }
+
+        $feed->save();
+        return $feed;
     }
 }

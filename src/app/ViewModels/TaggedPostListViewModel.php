@@ -78,7 +78,7 @@ class TaggedPostListViewModel extends ViewModel
     /**
      * removeTag Method.
      *
-     * @param $value
+     * @param string $value
      * @return string
      */
     public function removeTag(string $value): string

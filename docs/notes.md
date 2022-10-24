@@ -1,8 +1,6 @@
 # Notes
 
 ### TODO
-- [ ] Add an `Edit` page to edit a single Post.
-- [ ] Link to edit page from the Tagged Post page.
 
 ### Completed
 - [x] Add a new 'active' field to Items table and default to true.
@@ -24,6 +22,8 @@
 - [x] Update the `->cache()` queries to use the `now()->addMinutes(5) format.
 - [x] Add a link to full image in the Tagged Posts page.
 - [x] Wire the search tags in the Tagged page.
+- [x] Add an `Edit` page to edit a single Post.
+- [x] Link to edit page from the Tagged Post page.
 
 ### Not Implemented
 - [x] <del>Create a job to scan all the imported files and add the exif data to the items table (EXIF for images, FFPROB for videos).</del>

@@ -8,10 +8,7 @@ use App\Traits\TagsCacheable;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Livewire\Component;
-use Spatie\Tags\Tag;
 
 class PostTagsComponent extends BaseSearchTagComponent
 {
@@ -22,6 +19,8 @@ class PostTagsComponent extends BaseSearchTagComponent
     public array $tags;
 
     public bool $editTags = false;
+
+    public bool $modified = false;
 
 
     /**
@@ -50,6 +49,7 @@ class PostTagsComponent extends BaseSearchTagComponent
         $feed->save();
 
         $this->loadTags($post);
+        $this->modified = true;
         $this->reset();
     }
 
@@ -82,6 +82,7 @@ class PostTagsComponent extends BaseSearchTagComponent
         $post->detachTag($tag);
 
         $this->loadTags($post);
+        $this->modified = true;
         $this->reset();
     }
 
@@ -92,9 +93,13 @@ class PostTagsComponent extends BaseSearchTagComponent
      */
     public function cancel(): void
     {
-        $this->clearCache();
+        if ($this->modified) {
+            $this->clearCache();
+        }
+
         $this->reset();
         $this->editTags = false;
+        $this->modified = false;
     }
 
     /**
