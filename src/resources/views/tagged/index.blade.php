@@ -49,9 +49,9 @@
                 </div>
             </div>
 
-            <div x-data="{}" class="row mt-2">
+            <div x-data="{}" class="row mt-2 p-3 bg-white rounded">
             @forelse($posts as $post)
-                <div class="col-sm-6 col-md-4 col-lg-3 p-3 bg-white">
+                <div class="col-sm-6 col-md-4 col-lg-3">
                     <figure>
                     @if ($post['type'] == 'video')
                         <div class="ratio ratio-{{ $post['aspect'] }}">
@@ -76,7 +76,9 @@
                                 </a>
                             </span>
                         @endforeach
-                            <a href="#" @click.prevent="return" class="ms-2" target="_blank"><i class="fa-solid fa-lg fa-pen-to-square"></i></a>
+                            <a href="{{ route('post', $post['id']) }}" class="ms-2" target="_blank">
+                                <i class="fa-solid fa-lg fa-pen-to-square"></i>
+                            </a>
                         </figcaption>
                     </figure>
                 </div>
