@@ -1,6 +1,6 @@
 <?php use App\Http\Livewire\PostCommentsComponent; ?>
 
-<div x-show="comments" class="my-2 px-2 pt-2 pb-3 border-top">
+    <div x-show="comments" class="my-2 px-2 pt-2 pb-3 border-top">
 
     @if (session()->has('error'))
         <div x-data="{open: true}"
