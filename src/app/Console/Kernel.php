@@ -23,11 +23,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->job(new ExtractExifJob(new ExtractExifService()), 'media')
-            ->hourly();
-
         $schedule->job(new ImportMediaJob(new ImportMediaService()), 'ingestor')
-            ->dailyAt(17);
+            ->mondays()
+            ->thursdays()
+            ->at('16:00');
 
         $schedule->job(new GeneratePostJob(), 'default')
             ->cron("15 11,15,19,23 * * *");
