@@ -119,13 +119,13 @@ class ImportMediaService
             echo $baseFolder . PHP_EOL;
         }
 
-        $scans = array_diff(scandir($baseFolder, SCANDIR_SORT_ASCENDING), ['.', '..']);
+        $scans = array_diff(scandir($baseFolder, SCANDIR_SORT_ASCENDING), ['.', '..', '@eaDir']);
         if (empty($scans)) {
             return $this->scanFiles(++$position, $files);
         }
 
         foreach ($scans as $scan) {
-            if (str_starts_with($scan, config('raw-files.exclude'))) {
+            if (str($scan)->startsWith(config('raw-files.exclude'))) {
                 continue;
             }
 
