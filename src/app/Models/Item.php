@@ -78,6 +78,14 @@ class Item extends Model implements HasMedia
         $this->addMediaCollection('image')
             ->singleFile()
             ->useDisk('media');
+
+        $this->addMediaCollection('s3-image')
+            ->singleFile()
+            ->useDisk('s3');
+
+        $this->addMediaCollection('s3-video')
+            ->singleFile()
+            ->useDisk('s3');
     }
 
     /**

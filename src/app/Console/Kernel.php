@@ -2,12 +2,10 @@
 
 namespace App\Console;
 
-use App\Jobs\ExtractExifJob;
 use App\Jobs\GenerateFeedJob;
 use App\Jobs\GeneratePostJob;
 use App\Jobs\ImportMediaJob;
 use App\Services\AvatarGeneratorService;
-use App\Services\ExtractExifService;
 use App\Services\GenerateFeedService;
 use App\Services\ImportMediaService;
 use Illuminate\Console\Scheduling\Schedule;
@@ -24,8 +22,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->job(new ImportMediaJob(new ImportMediaService()), 'ingestor')
-            ->mondays()
-            ->thursdays()
+            ->wednesdays()
             ->at('16:00');
 
         $schedule->job(new GeneratePostJob(), 'default')
