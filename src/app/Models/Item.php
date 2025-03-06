@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Log;
 use Spatie\MediaLibrary\HasMedia;
@@ -78,14 +79,6 @@ class Item extends Model implements HasMedia
         $this->addMediaCollection('image')
             ->singleFile()
             ->useDisk('media');
-
-        $this->addMediaCollection('s3-image')
-            ->singleFile()
-            ->useDisk('s3');
-
-        $this->addMediaCollection('s3-video')
-            ->singleFile()
-            ->useDisk('s3');
     }
 
     /**
@@ -101,6 +94,11 @@ class Item extends Model implements HasMedia
             ->whereNull('posts.id')
             ->inRandomOrder()
             ->limit($limit);
+    }
+
+    public function itemFile(): HasOne
+    {
+        return $this->hasOne(ItemFile::class);
     }
 
     /**

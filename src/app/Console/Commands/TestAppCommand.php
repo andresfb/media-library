@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Item;
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Storage;
 
 class TestAppCommand extends Command
 {
@@ -19,31 +20,23 @@ class TestAppCommand extends Command
         try {
             $this->info("Starting test\n");
 
-//            $item = Item::find(1);
-//            $image = $item->getFirstMedia('image')?->first();
-//            if ($image === null) {
-//                $this->error("No image found");
-//            }
-//
-//            $file = $image->getPath();
-//
-//            $media = $item->addMedia($file)
-//                ->preservingOriginal()
-//                ->toMediaCollection('s3-image');
-//
-//            dump($media);
-
-            $item = Item::find(2);
-            $image = $item->getMedia('s3-image')->first();
+            $item = Item::find(10);
+            $image = $item->getMedia('image')->first();
             if ($image === null) {
                 $this->error("No image found");
             }
 
-            $url = $image->getUrl();
-            $file = $image->getPath();
+            $file = "/" . $image->getPathRelativeToRoot();
+            $file_info = pathinfo($file);
 
-            dump($image->toArray(), $url, $file);
+            Storage::disk('s3')->put(
+                $file,
+                Storage::disk('media')->get($file)
+            );
 
+            $url = Storage::disk('s3')->url($file);
+
+            dump($image->toArray(), $url, $file_info);
 
             $this->info("\nDone\n");
 
