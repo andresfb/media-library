@@ -19,8 +19,11 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  */
 class Item extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia, CascadeSoftDeletes;
-    use SoftDeletes, ConvertDateTimeToTimezone;
+    use HasFactory;
+    use InteractsWithMedia;
+    use CascadeSoftDeletes;
+    use SoftDeletes;
+    use ConvertDateTimeToTimezone;
 
     /** @var array */
     protected $guarded = [];
@@ -99,6 +102,13 @@ class Item extends Model implements HasMedia
     public function itemFile(): HasOne
     {
         return $this->hasOne(ItemFile::class);
+    }
+
+    public function scopePendingMove(Builder $query): Builder
+    {
+        return $query->where('active', true)
+            ->whereDoesntHave('itemFile')
+            ->limit(config('move-to-minio.max_per_run'));
     }
 
     /**
