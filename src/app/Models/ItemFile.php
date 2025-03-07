@@ -10,6 +10,8 @@ class ItemFile extends Model
     /** @var array */
     protected $guarded = ['id'];
 
+    public $timestamps = false;
+
     public function item(): BelongsTo
     {
         return $this->belongsTo(Item::class);

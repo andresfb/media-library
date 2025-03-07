@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Item;
+use App\Models\ItemFile;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
@@ -20,23 +21,12 @@ class TestAppCommand extends Command
         try {
             $this->info("Starting test\n");
 
-            $item = Item::find(10);
-            $image = $item->getMedia('image')->first();
-            if ($image === null) {
-                $this->error("No image found");
-            }
+            $itemFile = ItemFile::find(2);
 
-            $file = "/" . $image->getPathRelativeToRoot();
-            $file_info = pathinfo($file);
+            $disk = Storage::disk('s3');
+            $signedUrl = $disk->temporaryUrl($itemFile->url, now()->addMinutes(30));
 
-            Storage::disk('s3')->put(
-                $file,
-                Storage::disk('media')->get($file)
-            );
-
-            $url = Storage::disk('s3')->url($file);
-
-            dump($image->toArray(), $url, $file_info);
+            dump($signedUrl);
 
             $this->info("\nDone\n");
 

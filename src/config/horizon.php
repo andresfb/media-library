@@ -209,6 +209,16 @@ return [
                 'timeout' => 900,
                 'tries' => 1,
             ],
+
+            'minio-move-supervisor' => [
+                'connection' => 'redis',
+                'queue' => ['minio-move'],
+                'balance' => 'auto',
+                'minProcesses' => 3,
+                'maxProcesses' => 5,
+                'timeout' => 900,
+                'tries' => 2,
+            ],
         ],
 
         'local' => [
@@ -239,6 +249,16 @@ return [
                 'maxProcesses' => 3,
                 'timeout' => 900,
                 'tries' => 1,
+            ],
+
+            'minio-move-supervisor' => [
+                'connection' => 'redis',
+                'queue' => ['minio-move'],
+                'balance' => 'auto',
+                'minProcesses' => 3,
+                'maxProcesses' => 5,
+                'timeout' => 900,
+                'tries' => 2,
             ],
         ],
     ],

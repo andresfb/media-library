@@ -30,7 +30,7 @@ class MoveToMinioJob implements ShouldQueue
         try {
             $service->execute($this->itemId);
         } catch (Exception $e) {
-            Log::error('Error moving item to Minio: ' . $e->getMessage());
+            Log::error("Error moving item id: $this->itemId to Minio: {$e->getMessage()}");
 
             throw $e;
         }
