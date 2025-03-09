@@ -99,11 +99,6 @@ class Item extends Model implements HasMedia
             ->limit($limit);
     }
 
-    public function itemFile(): HasOne
-    {
-        return $this->hasOne(ItemFile::class);
-    }
-
     public function scopePendingMove(Builder $query): Builder
     {
         return $query->where('active', true)
